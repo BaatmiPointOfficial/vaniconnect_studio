@@ -45,7 +45,7 @@ export default function Studio() {
   
   const checkJobStatus = async (jobId) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/job-status/${jobId}`);
+      const response = await axios.get(`https://vaniconnect-ai.onrender.com/api/job-status/${jobId}`);
       const data = response.data;
       
       if (data.status === "completed" || data.status === "SUCCESS" || data.status === "success") {
@@ -69,7 +69,7 @@ export default function Studio() {
     formData.append("file", selectedFile);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/enhance-video", formData);
+      const response = await axios.post("https://vaniconnect-ai.onrender.com/api/enhance-video", formData);
       if (response.data.job_id) {
         checkJobStatus(response.data.job_id);
       }
@@ -89,7 +89,7 @@ export default function Studio() {
     formData.append("w", wmW); formData.append("h", wmH);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/remove-video-watermark", formData);
+      const response = await axios.post("https://vaniconnect-ai.onrender.com/api/remove-video-watermark", formData);
       if (response.data && response.data.job_id) {
         checkJobStatus(response.data.job_id);
       } else { 
@@ -114,7 +114,7 @@ export default function Studio() {
     formData.append("style", wmStyle);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/remove-photo-watermark", formData);
+      const response = await axios.post("https://vaniconnect-ai.onrender.com/api/remove-photo-watermark", formData);
       if (response.data && response.data.job_id) {
         checkJobStatus(response.data.job_id);
       } else { alert("No job ticket!"); setLoading(false); }
@@ -130,7 +130,7 @@ export default function Studio() {
     formData.append("style", enhanceStyle);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/enhance-photo", formData);
+      const response = await axios.post("https://vaniconnect-ai.onrender.com/api/enhance-photo", formData);
       if (response.data && response.data.job_id) {
         checkJobStatus(response.data.job_id);
       } else { 
@@ -152,7 +152,7 @@ export default function Studio() {
     formData.append("file", selectedFile);
     
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/remove-background", formData);
+      const response = await axios.post("https://vaniconnect-ai.onrender.com/api/remove-background", formData);
       if (response.data && response.data.job_id) {
         checkJobStatus(response.data.job_id);
       } else { 
@@ -173,9 +173,9 @@ export default function Studio() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/enhance-video", formData);
+      const response = await axios.post("https://vaniconnect-ai.onrender.com/api/enhance-video", formData);
       if (response.data.status === "success") {
-        setResultUrl(`http://127.0.0.1:8000${response.data.file_url}`);
+        setResultUrl(`https://vaniconnect-ai.onrender.com${response.data.file_url}`);
       }
     } catch (error) { alert("Error"); } finally { setLoading(false); }
   };
@@ -185,7 +185,7 @@ export default function Studio() {
     setLoading(true);
     setResultUrl(null);
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/yt-download", { url: ytUrl, quality: ytQuality });
+      const response = await axios.post("https://vaniconnect-ai.onrender.com/api/yt-download", { url: ytUrl, quality: ytQuality });
       if (response.data && response.data.job_id) {
         checkJobStatus(response.data.job_id);
       } else { alert("No job ticket!"); setLoading(false); }
@@ -223,7 +223,7 @@ export default function Studio() {
     formData.append("w", logoW);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/add-logo", formData);
+      const response = await axios.post("https://vaniconnect-ai.onrender.com/api/add-logo", formData);
       if (response.data && response.data.job_id) {
         checkJobStatus(response.data.job_id);
       } else {
@@ -292,7 +292,7 @@ export default function Studio() {
             <div className="animate-in zoom-in duration-300 mt-8">
               <div className="bg-green-100 text-green-800 p-4 rounded-xl mb-6 font-bold max-w-md mx-auto border border-green-200">✅ File Ready for Download!</div>
               {ytId && <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="Thumbnail" className="max-w-md mx-auto rounded-xl shadow-lg mb-6 border-4 border-gray-800" />}
-              <a href={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} download className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg"><Download className="mr-2" /> Save File to Computer</a>
+              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} download className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg"><Download className="mr-2" /> Save File to Computer</a>
             </div>
           )}
         </div>
@@ -382,8 +382,8 @@ export default function Studio() {
           
           {resultUrl && (
             <div className="mt-10 text-center">
-              <video src={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} controls className="w-full max-h-96 rounded-xl shadow-lg mb-6" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} download className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center"><Download className="mr-2" /> Download Branded Video</a>
+              <video src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} controls className="w-full max-h-96 rounded-xl shadow-lg mb-6" />
+              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} download className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center"><Download className="mr-2" /> Download Branded Video</a>
             </div>
           )}
         </div>
@@ -449,12 +449,12 @@ export default function Studio() {
                 <div className="flex flex-col items-center bg-gray-50 p-4 rounded-2xl border border-gray-200 shadow-sm">
                   <span className="bg-pink-100 text-pink-700 px-4 py-1 rounded-full text-sm font-bold mb-4 shadow-sm">After (Transparent)</span>
                   <div className="w-full h-full min-h-[18rem] flex items-center justify-center rounded-xl shadow-inner border border-gray-300 overflow-hidden relative" style={{ backgroundImage: 'linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%)', backgroundSize: '20px 20px', backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px', backgroundColor: '#f9fafb' }}>
-                    <img src={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} className="max-w-full max-h-72 object-contain drop-shadow-2xl" alt="Transparent Photo" />
+                    <img src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} className="max-w-full max-h-72 object-contain drop-shadow-2xl" alt="Transparent Photo" />
                   </div>
                 </div>
               </div>
 
-              <a href={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} download className="bg-pink-500 text-white px-10 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-pink-600 transition-transform active:scale-95 text-lg">
+              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} download className="bg-pink-500 text-white px-10 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-pink-600 transition-transform active:scale-95 text-lg">
                 <Download className="mr-2" /> Download Transparent PNG
               </a>
             </div>
@@ -495,8 +495,8 @@ export default function Studio() {
           
           {resultUrl && !loading && (
             <div className="animate-in zoom-in duration-300">
-              <img src={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} className="max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} download className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-green-600"><Download className="mr-2" /> Download Photo</a>
+              <img src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} className="max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100" />
+              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} download className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-green-600"><Download className="mr-2" /> Download Photo</a>
             </div>
           )}
         </div>
@@ -559,8 +559,8 @@ export default function Studio() {
 
           {resultUrl && !loading && (
             <div className="animate-in zoom-in duration-300 mt-8">
-              <img src={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} className="max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} download className="bg-teal-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-teal-600"><Download className="mr-2" /> Download Photo</a>
+              <img src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} className="max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100" />
+              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} download className="bg-teal-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-teal-600"><Download className="mr-2" /> Download Photo</a>
             </div>
           )}
         </div>
@@ -604,8 +604,8 @@ export default function Studio() {
           
           {resultUrl && !loading && (
             <div className="animate-in zoom-in duration-300">
-              <video src={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} controls className="w-full max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100 bg-black" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} download className="bg-amber-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-amber-600"><Download className="mr-2" /> Download Video</a>
+              <video src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} controls className="w-full max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100 bg-black" />
+              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} download className="bg-amber-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-amber-600"><Download className="mr-2" /> Download Video</a>
             </div>
           )}
         </div>
@@ -650,8 +650,8 @@ export default function Studio() {
           {resultUrl && !loading && (
             <div className="mt-8 animate-in zoom-in duration-300">
               <div className="bg-green-100 text-green-800 px-6 py-2 rounded-full inline-block font-bold mb-6">✨ Enhancement Complete!</div>
-              <video src={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} controls className="w-full max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100 bg-black" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} download className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-blue-700">
+              <video src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} controls className="w-full max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100 bg-black" />
+              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} download className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-blue-700">
                 <Download className="mr-2" /> Download Enhanced Video
               </a>
             </div>
@@ -706,7 +706,7 @@ export default function Studio() {
                   formData.append("text", overlayText); 
                   
                   try {
-                    const res = await axios.post("http://127.0.0.1:8000/api/Clip Cut Pro-edit", formData);
+                    const res = await axios.post("https://vaniconnect-ai.onrender.com/api/Clip Cut Pro-edit", formData);
                     if (res.data && res.data.job_id) {
                       checkJobStatus(res.data.job_id);
                     } else {
@@ -737,8 +737,8 @@ export default function Studio() {
           {resultUrl && !loading && (
             <div className="mt-8 animate-in zoom-in duration-300">
               <div className="bg-green-100 text-green-800 px-6 py-2 rounded-full inline-block font-bold mb-6">✨ Video Edited Successfully!</div>
-              <video src={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} controls className="w-full max-h-96 mx-auto mb-6 rounded-xl shadow-lg bg-black" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `http://127.0.0.1:8000${resultUrl}`} download className="bg-purple-600 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-purple-700">
+              <video src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} controls className="w-full max-h-96 mx-auto mb-6 rounded-xl shadow-lg bg-black" />
+              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-ai.onrender.com${resultUrl}`} download className="bg-purple-600 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-purple-700">
                 <Download className="mr-2" /> Download Final Video
               </a>
             </div>
