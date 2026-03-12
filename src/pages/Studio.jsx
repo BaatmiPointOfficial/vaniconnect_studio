@@ -370,7 +370,7 @@ export default function Studio() {
               {ytId && <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="Thumbnail" className="max-w-md mx-auto rounded-xl shadow-lg mb-6 border-4 border-gray-800" />}
               <button
               type="button"
-              onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg">
+              onClick={() => handleYTDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg">
   <Download className="mr-2" /> Save File to Computer
 </button>
             </div>
