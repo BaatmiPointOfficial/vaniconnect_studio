@@ -143,11 +143,19 @@ export default function Studio() {
 
     try {
       const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/enhance-photo", formData);
+      
       if (response.data && response.data.job_id) {
-        checkJobStatus(response.data.job_id);
-      } else { 
-        alert("Backend did not return a job ticket!"); 
-        setLoading(false); 
+          checkJobStatus(response.data.job_id);
+      } else if (response.data && (response.data.file_name || response.data.file_url)) {
+          // The AI finished instantly! Show the file directly.
+          const finalUrl = response.data.file_url 
+              ? response.data.file_url 
+              : `https://vaniconnect-vaniconnect-api.hf.space/downloads/${response.data.file_name}`;
+          setResultUrl(finalUrl);
+          setLoading(false);
+      } else {
+          alert("No job ticket returned.");
+          setLoading(false);
       }
     } catch (e) { 
       const errorMsg = e.response && e.response.data ? JSON.stringify(e.response.data) : e.message;
