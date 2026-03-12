@@ -368,7 +368,9 @@ export default function Studio() {
             <div className="animate-in zoom-in duration-300 mt-8">
               <div className="bg-green-100 text-green-800 p-4 rounded-xl mb-6 font-bold max-w-md mx-auto border border-green-200">✅ File Ready for Download!</div>
               {ytId && <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="Thumbnail" className="max-w-md mx-auto rounded-xl shadow-lg mb-6 border-4 border-gray-800" />}
-              <button onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg">
+              <button
+              type="button"
+              onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg">
   <Download className="mr-2" /> Save File to Computer
 </button>
             </div>
