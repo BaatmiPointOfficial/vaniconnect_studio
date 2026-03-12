@@ -264,11 +264,11 @@ export default function Studio() {
     setLoading(true);
     setResultUrl(null);
     const formData = new FormData();
-    formData.append("video", selectedFile);
-    formData.append("logo", selectedLogo);
+    formData.append("video_file", selectedFile); // Changed from "video"
+    formData.append("logo_file", selectedLogo);  // Changed from "logo"
     formData.append("x", logoX);
     formData.append("y", logoY);
-    formData.append("w", logoW);
+    formData.append("logo_w", logoW);            // Changed from "w"
 
     try {
       const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/add-custom-logo", formData);
