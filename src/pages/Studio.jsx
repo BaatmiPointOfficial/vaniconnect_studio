@@ -356,8 +356,8 @@ export default function Studio() {
                 </div>
               )}
 
-              <button onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg">
-  <Download className="mr-2" /> Save File to Computer
+              <button onClick={handleYtProcess} className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg">
+  <Download className="mr-2" /> Start Download
 </button>
             </div>
           )}
@@ -368,7 +368,9 @@ export default function Studio() {
             <div className="animate-in zoom-in duration-300 mt-8">
               <div className="bg-green-100 text-green-800 p-4 rounded-xl mb-6 font-bold max-w-md mx-auto border border-green-200">✅ File Ready for Download!</div>
               {ytId && <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="Thumbnail" className="max-w-md mx-auto rounded-xl shadow-lg mb-6 border-4 border-gray-800" />}
-              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} download className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg"><Download className="mr-2" /> Save File to Computer</a>
+              <button onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg">
+  <Download className="mr-2" /> Save File to Computer
+</button>
             </div>
           )}
         </div>
@@ -450,9 +452,13 @@ export default function Studio() {
 
           {selectedFile && selectedLogo && !loading && !resultUrl && (
             <div className="text-center">
-             <button onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-green-600">
-  <Download className="mr-2" /> Download Branded Video
-</button>
+              {/* 1. WE CHANGED THIS BACK TO THE START BUTTON! */}
+              <button 
+                onClick={handleAddLogoProcess} 
+                className="bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-indigo-700 text-lg"
+              >
+                Start Branding Video
+              </button>
             </div>
           )}
 
@@ -461,13 +467,20 @@ export default function Studio() {
           {resultUrl && (
             <div className="mt-10 text-center">
               <video src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} controls className="w-full max-h-96 rounded-xl shadow-lg mb-6" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} download className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center"><Download className="mr-2" /> Download Branded Video</a>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
+              
+              {/* 2. WE PUT THE NEW DOWNLOAD BUTTON HERE AT THE BOTTOM! */}
+              <button 
+                onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} 
+                className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center"
+              >
+                <Download className="mr-2" /> Download Branded Video
+              </button>
+            </div>)}
+           </div>
+           </div> 
+          );
+          }
+  
 
   if (activeTool === "Background Remover") {
     return (
@@ -568,9 +581,12 @@ export default function Studio() {
                   <option value="HDR Portrait">3. HDR Portrait (Studio Lighting)</option>
                 </select>
               </div>
-             <button onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-green-600">
-  <Download className="mr-2" /> Download Photo
-</button>
+             <button 
+                onClick={handlePhotoEnhanceProcess} 
+                className="bg-green-500 text-white px-10 py-4 rounded-xl font-bold shadow-lg hover:bg-green-600 text-lg transition-transform active:scale-95"
+              >
+                Enhance Photo
+              </button>
             </div>
           )}
           
@@ -579,7 +595,12 @@ export default function Studio() {
           {resultUrl && !loading && (
             <div className="animate-in zoom-in duration-300">
               <img src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} className="max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} download className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-green-600"><Download className="mr-2" /> Download Photo</a>
+              <button 
+                onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} 
+                className="bg-green-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-green-600"
+              >
+                <Download className="mr-2" /> Download Photo
+              </button>
             </div>
           )}
         </div>
@@ -634,9 +655,13 @@ export default function Studio() {
                 </div>
               </div>
 
-               <button onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-teal-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-teal-600">
-  <Download className="mr-2" /> Download Photo
-</button>
+               {/* 1. WE RESTORED THE START BUTTON HERE! (Make sure the onClick name matches your function!) */}
+              <button 
+                onClick={handlePhotoWatermarkProcess} 
+                className="bg-teal-500 text-white px-10 py-4 rounded-xl font-bold shadow-lg hover:bg-teal-600 transition-transform active:scale-95 text-lg"
+              >
+                Remove Watermark
+              </button>
             </div>
           )}
 
@@ -645,9 +670,17 @@ export default function Studio() {
           {resultUrl && !loading && (
             <div className="animate-in zoom-in duration-300 mt-8">
               <img src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} className="max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} download className="bg-teal-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-teal-600"><Download className="mr-2" /> Download Photo</a>
+              
+              {/* 2. WE PUT THE NEW DOWNLOAD BUTTON HERE AT THE VERY BOTTOM! */}
+              <button 
+                onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} 
+                className="bg-teal-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-teal-600"
+              >
+                <Download className="mr-2" /> Download Photo
+              </button>
             </div>
           )}
+        
         </div>
       </div>
     );
@@ -681,9 +714,13 @@ export default function Studio() {
                   <div><label className="block text-xs font-bold text-gray-600 mb-1">Height</label><input type="number" value={wmH} onChange={e=>setWmH(Number(e.target.value))} className="w-full p-2 border rounded outline-none focus:ring-2 focus:ring-amber-400 font-mono" /></div>
                 </div>
               </div>
-              <button onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} className="bg-amber-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-amber-600">
-  <Download className="mr-2" /> Download Video
-</button>
+              {/* 1. WE RESTORED THE START BUTTON HERE! */}
+              <button 
+                onClick={handleVideoWatermarkProcess} 
+                className="bg-amber-500 text-white px-10 py-4 rounded-xl font-bold shadow-lg hover:bg-amber-600 transition-transform active:scale-95 text-lg"
+              >
+                Remove Watermark
+              </button>
             </div>
           )}
           
@@ -692,7 +729,14 @@ export default function Studio() {
           {resultUrl && !loading && (
             <div className="animate-in zoom-in duration-300">
               <video src={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} controls className="w-full max-h-96 mx-auto mb-6 rounded-xl shadow-lg border-4 border-gray-100 bg-black" />
-              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} download className="bg-amber-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-amber-600"><Download className="mr-2" /> Download Video</a>
+              
+              {/* 2. WE PUT THE NEW DOWNLOAD BUTTON HERE AT THE VERY BOTTOM! */}
+              <button 
+                onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} 
+                className="bg-amber-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-amber-600"
+              >
+                <Download className="mr-2" /> Download Video
+              </button>
             </div>
           )}
         </div>
@@ -793,11 +837,20 @@ export default function Studio() {
                   formData.append("text", overlayText); 
                   
                   try {
-                    const res = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/Clip Cut Pro-edit", formData);
+                    // ⚠️ IMPORTANT: Check your app.py to make sure this URL matches your @app.post exactly!
+                    const res = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/clip-cut-pro", formData);
+                    
                     if (res.data && res.data.job_id) {
                       checkJobStatus(res.data.job_id);
+                    } else if (res.data && (res.data.file_name || res.data.file_url)) {
+                      // Instantly catch the finished file!
+                      const finalUrl = res.data.file_url 
+                          ? res.data.file_url 
+                          : `https://vaniconnect-vaniconnect-api.hf.space/downloads/${res.data.file_name}`;
+                      setResultUrl(finalUrl);
+                      setLoading(false);
                     } else {
-                      alert("Backend did not return a job ticket!");
+                      alert("Backend did not return a file!");
                       setLoading(false);
                     }
                   } catch (e) {
