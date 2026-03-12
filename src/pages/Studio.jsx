@@ -116,9 +116,21 @@ export default function Studio() {
     try {
       const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/remove-photo-watermark", formData);
       if (response.data && response.data.job_id) {
-        checkJobStatus(response.data.job_id);
-      } else { alert("No job ticket!"); setLoading(false); }
-    } catch (e) { alert("Error"); setLoading(false); }
+            checkJobStatus(response.data.job_id);
+        } else if (response.data && (response.data.file_name || response.data.file_url)) {
+            // The AI finished instantly! Show the file directly.
+            const finalUrl = response.data.file_url 
+                ? response.data.file_url 
+                : `https://vaniconnect-vaniconnect-api.hf.space/api/download/${response.data.file_name}`;
+            setResultUrl(finalUrl);
+            setLoading(false);
+        } else {
+            alert("No job ticket returned.");
+            setLoading(false);
+          }
+          } catch (error) {
+        alert("Error processing file.");
+        setLoading(false);}
   };
 
   const handlePhotoEnhanceProcess = async () => {
@@ -154,11 +166,18 @@ export default function Studio() {
     try {
       const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/remove-background", formData);
       if (response.data && response.data.job_id) {
-        checkJobStatus(response.data.job_id);
-      } else { 
-        alert("No job ticket!"); 
-        setLoading(false); 
-      }
+            checkJobStatus(response.data.job_id);
+        } else if (response.data && (response.data.file_name || response.data.file_url)) {
+            // The AI finished instantly! Show the file directly.
+            const finalUrl = response.data.file_url 
+                ? response.data.file_url 
+                : `https://vaniconnect-vaniconnect-api.hf.space/api/download/${response.data.file_name}`;
+            setResultUrl(finalUrl);
+            setLoading(false);
+        } else {
+            alert("No job ticket returned.");
+            setLoading(false);
+        }
     } catch (e) { 
       alert("Error processing file"); 
       setLoading(false); 
@@ -187,9 +206,20 @@ export default function Studio() {
     try {
       const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/yt-download", { url: ytUrl, quality: ytQuality });
       if (response.data && response.data.job_id) {
-        checkJobStatus(response.data.job_id);
-      } else { alert("No job ticket!"); setLoading(false); }
-    } catch (e) { alert("Error downloading YouTube video"); setLoading(false); }
+            checkJobStatus(response.data.job_id);
+        } else if (response.data && (response.data.file_name || response.data.file_url)) {
+            // The AI finished instantly! Show the file directly.
+            const finalUrl = response.data.file_url 
+                ? response.data.file_url 
+                : `https://vaniconnect-vaniconnect-api.hf.space/api/download/${response.data.file_name}`;
+            setResultUrl(finalUrl);
+            setLoading(false);
+        } else {
+            alert("No job ticket returned.");
+            setLoading(false);
+        }} catch (error) {
+        alert("Error processing file.");
+        setLoading(false);}
   };
 
   const handleFileSelect = (event) => {
@@ -236,7 +266,7 @@ export default function Studio() {
       setLoading(false); 
     }
   };
-
+  
   if (activeTool === "YouTube Downloader") {
     const ytId = ytUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)?.[1];
 
@@ -772,3 +802,4 @@ export default function Studio() {
 </div>
 );
 }
+  
