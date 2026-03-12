@@ -20,6 +20,27 @@ const tools = [
 export default function Studio() {
   const [activeTool, setActiveTool] = useState(null);
   const [loading, setLoading] = useState(false);
+  // MAGIC FUNCTION TO FORCE DOWNLOADS ACROSS SERVERS
+  const handleForceDownload = async (fileUrl) => {
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      const fileName = fileUrl.split('/').pop() || 'VaniConnect_File';
+      link.download = fileName;
+      
+      document.body.appendChild(link);
+      link.click();
+      
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      window.open(fileUrl, '_blank'); // Fallback if browser blocks it
+    }
+  };
   const [resultUrl, setResultUrl] = useState(null);
   const [ytUrl, setYtUrl] = useState("");
   
@@ -509,9 +530,12 @@ export default function Studio() {
                 </div>
               </div>
 
-              <a href={resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`} download className="bg-pink-500 text-white px-10 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-pink-600 transition-transform active:scale-95 text-lg">
-                <Download className="mr-2" /> Download Transparent PNG
-              </a>
+              <button 
+  onClick={() => handleForceDownload(resultUrl.startsWith('http') ? resultUrl : `https://vaniconnect-vaniconnect-api.hf.space${resultUrl}`)} 
+  className="bg-pink-500 text-white px-10 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-pink-600 transition-transform active:scale-95 text-lg"
+>
+  <Download className="mr-2" /> Download Transparent PNG
+</button>
             </div>
           )}
         </div>
