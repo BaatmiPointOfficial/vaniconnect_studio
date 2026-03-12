@@ -70,8 +70,18 @@ export default function Studio() {
 
     try {
       const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/enhance-video", formData);
-      if (response.data.job_id) {
-        checkJobStatus(response.data.job_id);
+      
+      if (response.data && response.data.job_id) {
+          checkJobStatus(response.data.job_id);
+      } else if (response.data && (response.data.file_name || response.data.file_url)) {
+          const finalUrl = response.data.file_url 
+              ? response.data.file_url 
+              : `https://vaniconnect-vaniconnect-api.hf.space/downloads/${response.data.file_name}`;
+          setResultUrl(finalUrl);
+          setLoading(false);
+      } else {
+          alert("No job ticket returned.");
+          setLoading(false);
       }
     } catch (e) { 
       alert("Error starting process"); 
@@ -262,8 +272,15 @@ export default function Studio() {
 
     try {
       const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/add-logo", formData);
+      
       if (response.data && response.data.job_id) {
         checkJobStatus(response.data.job_id);
+      } else if (response.data && (response.data.file_name || response.data.file_url)) {
+        const finalUrl = response.data.file_url 
+            ? response.data.file_url 
+            : `https://vaniconnect-vaniconnect-api.hf.space/downloads/${response.data.file_name}`;
+        setResultUrl(finalUrl);
+        setLoading(false);
       } else {
         alert("Backend did not return a job ticket!");
         setLoading(false);
