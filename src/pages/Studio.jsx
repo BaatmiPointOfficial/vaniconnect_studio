@@ -121,7 +121,7 @@ export default function Studio() {
             // The AI finished instantly! Show the file directly.
             const finalUrl = response.data.file_url 
                 ? response.data.file_url 
-                : `https://vaniconnect-vaniconnect-api.hf.space/api/download/${response.data.file_name}`;
+                : `https://vaniconnect-vaniconnect-api.hf.space/downloads/${response.data.file_name}`;
             setResultUrl(finalUrl);
             setLoading(false);
         } else {
@@ -171,7 +171,7 @@ export default function Studio() {
             // The AI finished instantly! Show the file directly.
             const finalUrl = response.data.file_url 
                 ? response.data.file_url 
-                : `https://vaniconnect-vaniconnect-api.hf.space/api/download/${response.data.file_name}`;
+                : `https://vaniconnect-vaniconnect-api.hf.space/downloads/${response.data.file_name}`;
             setResultUrl(finalUrl);
             setLoading(false);
         } else {
@@ -211,7 +211,7 @@ export default function Studio() {
             // The AI finished instantly! Show the file directly.
             const finalUrl = response.data.file_url 
                 ? response.data.file_url 
-                : `https://vaniconnect-vaniconnect-api.hf.space/api/download/${response.data.file_name}`;
+                : `https://vaniconnect-vaniconnect-api.hf.space/downloads/${response.data.file_name}`;
             setResultUrl(finalUrl);
             setLoading(false);
         } else {
