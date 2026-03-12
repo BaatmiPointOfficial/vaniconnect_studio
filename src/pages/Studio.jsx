@@ -271,7 +271,7 @@ export default function Studio() {
     formData.append("w", logoW);
 
     try {
-      const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/add-logo", formData);
+      const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/add-custom-logo", formData);
       
       if (response.data && response.data.job_id) {
         checkJobStatus(response.data.job_id);
