@@ -356,7 +356,7 @@ export default function Studio() {
                 </div>
               )}
 
-              <button onClick={handleYtProcess} className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg">
+              <button onClick={handleYTDownload } className="bg-red-500 text-white px-8 py-4 rounded-xl font-bold inline-flex items-center shadow-lg hover:bg-red-600 text-lg">
   <Download className="mr-2" /> Start Download
 </button>
             </div>
