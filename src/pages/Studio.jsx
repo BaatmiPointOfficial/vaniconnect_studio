@@ -243,7 +243,13 @@ export default function Studio() {
     setLoading(true);
     setResultUrl(null);
     try {
-      const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/yt-download", { url: ytUrl, quality: ytQuality });
+       // 1. Pack the data into a "Form" exactly how Python wants it
+const formData = new FormData();
+formData.append("url", ytUrl);
+formData.append("quality", ytQuality);
+
+// 2. Send it to the correct door!
+const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/youtube-downloader", formData);
       if (response.data && response.data.job_id) {
             checkJobStatus(response.data.job_id);
         } else if (response.data && (response.data.file_name || response.data.file_url)) {
