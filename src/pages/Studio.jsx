@@ -242,30 +242,40 @@ export default function Studio() {
     if (!ytUrl) return;
     setLoading(true);
     setResultUrl(null);
-    try {
-       // 1. Pack the data into a "Form" exactly how Python wants it
-const formData = new FormData();
-formData.append("url", ytUrl);
-formData.append("quality", ytQuality);
 
-// 2. Send it to the correct door!
-const response = await axios.post("https://vaniconnect-vaniconnect-api.hf.space/api/youtube-downloader", formData);
-      if (response.data && response.data.job_id) {
-            checkJobStatus(response.data.job_id);
-        } else if (response.data && (response.data.file_name || response.data.file_url)) {
-            // The AI finished instantly! Show the file directly.
-            const finalUrl = response.data.file_url 
-                ? response.data.file_url 
-                : `https://vaniconnect-vaniconnect-api.hf.space/downloads/${response.data.file_name}`;
+    try {
+        // 1. Pack the data into a "Form" exactly how Python wants it
+        const formData = new FormData();
+        formData.append("url", ytUrl);
+        formData.append("quality", ytQuality);
+
+        // 2. Send it straight to your NEW Render server! 🚀
+        const response = await axios.post("https://yt-microservice-o8lu.onrender.com/api/youtube-downloader", formData);
+
+        // 3. Render finishes the download and gives us the filename
+        if (response.data && response.data.file_name) {
+            
+            // ☁️ CLOUDFLARE R2 URL:
+            // Since Render sends the video to Cloudflare, we need your Cloudflare Public Link here!
+            // Replace this placeholder with your actual R2 Dev/Public Domain
+            const r2PublicDomain = "https://pub-98e9dffa20b840209de8be8bb4cd083d.r2.dev"; 
+            
+            const finalUrl = `${r2PublicDomain}/downloads/${response.data.file_name}`;
+            
             setResultUrl(finalUrl);
             setLoading(false);
         } else {
-            alert("No job ticket returned.");
+            alert("Download failed or no file returned.");
             setLoading(false);
-        }} catch (error) {
-        alert("Error processing file.");
-        setLoading(false);}
-  };
+        }
+
+    } catch (error) {
+        console.error(error);
+        // If Render was "asleep", it might timeout the first time. 
+        alert("Error processing file. If the server was asleep, it's waking up now! Try again in 30 seconds.");
+        setLoading(false);
+    }
+};
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
