@@ -1,0 +1,24 @@
+/* 1. IMPORT THE PREMIUM FONT FIRST */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* 2. LOAD TAILWIND */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3. OVERRIDE THE DEFAULT SYSTEM FONT */
+@layer base {
+  html {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+}
+
+/* 4. YOUR CUSTOM SCROLLBAR UTILITY (Kept perfectly intact!) */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
