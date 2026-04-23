@@ -76,7 +76,7 @@ export default function Downloader() {
         return;
       }
 
-      const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/create-order`, {
+      const orderResponse = await fetch(`${import.meta.env.VITE_RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -93,7 +93,7 @@ export default function Downloader() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/verify-payment`, {
+          const verifyResponse = await fetch(`${import.meta.env.VITE_RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -145,7 +145,7 @@ export default function Downloader() {
       formData.append("quality", quality); 
       formData.append("user_id", currentUser.uid);
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/download`, {
+      const response = await fetch(`${import.meta.env.VITE_RENDER_API}/api/download`, {
         method: "POST",
         body: formData
       });
@@ -154,7 +154,7 @@ export default function Downloader() {
       
       if (!response.ok || data.error) throw new Error(data.detail || data.error || "Failed to download video.");
 
-      setDownloadLink(`${import.meta.env.VITE_API_URL}/downloads/${data.file_name}`);
+      setDownloadLink(`${import.meta.env.VITE_RENDER_API}/downloads/${data.file_name}`);
       setVideoTitle(data.title);
       setThumbnailUrl(data.thumbnail);
       setIsAudioOnly(data.is_audio);

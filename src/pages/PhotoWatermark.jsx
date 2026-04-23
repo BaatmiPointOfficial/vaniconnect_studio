@@ -228,7 +228,7 @@ export default function PhotoWatermark() {
       formData.append("w", finalW);
       formData.append("h", finalH);
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/remove-photo-watermark`, {
+      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/remove-photo-watermark`, {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
@@ -240,7 +240,7 @@ export default function PhotoWatermark() {
         throw new Error(data.detail || data.error || "Failed to process photo");
       }
 
-      setResultPhoto(`${import.meta.env.VITE_API_URL}/downloads/${data.file_name}`);
+      setResultPhoto(`${import.meta.env.VITE_HF_API}/downloads/${data.file_name}`);
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");

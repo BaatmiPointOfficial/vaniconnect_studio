@@ -172,7 +172,7 @@ export default function VideoEnhancer() {
       formData.append("denoise", denoise);
       formData.append("user_id", currentUser.uid);
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/enhance-video`, {
+      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/enhance-video`, {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
@@ -182,7 +182,7 @@ export default function VideoEnhancer() {
       
       if (!response.ok) throw new Error(data.detail || data.error || "Failed to process video");
 
-      setResultVideo(`${import.meta.env.VITE_API_URL}/downloads/${data.file_name}`);
+      setResultVideo(`${import.meta.env.VITE_HF_API}/downloads/${data.file_name}`);
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");

@@ -34,7 +34,7 @@ export default function Pricing() {
 
       await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for script
 
-      const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/create-order`, {
+      const orderResponse = await fetch(`${import.meta.env.VITE_RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -43,14 +43,14 @@ export default function Pricing() {
 
       const options = {
 
-        key: "rzp_test_SfizNz9HbWwVaK", // 🚨 PASTE YOUR REAL TEST KEY ID HERE!
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderData.amount,
         currency: orderData.currency,
         name: "VaniConnect Studio",
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/verify-payment`, {
+          const verifyResponse = await fetch(`${import.meta.env.VITE_RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ ...response, user_id: currentUser.uid })

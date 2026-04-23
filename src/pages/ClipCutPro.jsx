@@ -182,7 +182,7 @@ export default function ClipCutPro() {
       formData.append("text", overlayText);
       formData.append("user_id", currentUser.uid);
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/clipcut-pro`, {
+      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/clipcut-pro`, {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
@@ -194,7 +194,7 @@ export default function ClipCutPro() {
         throw new Error(data.detail || data.error || "Failed to process video");
       }
 
-      setResultMedia(`${import.meta.env.VITE_API_URL}/downloads/${data.file_name}`);
+      setResultMedia(`${import.meta.env.VITE_HF_API}/downloads/${data.file_name}`);
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");

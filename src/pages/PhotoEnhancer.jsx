@@ -132,7 +132,7 @@ export default function PhotoEnhancer() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/verify-payment`, {
+          const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -185,7 +185,7 @@ export default function PhotoEnhancer() {
       formData.append("color_correction", colorCorrection ? "true" : "false");
       formData.append("user_id", currentUser.uid);
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/enhance-photo`, {
+      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/enhance-photo`, {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
@@ -197,7 +197,7 @@ export default function PhotoEnhancer() {
         throw new Error(data.detail || data.error || "Failed to enhance photo");
       }
 
-      setResultUrl(`${import.meta.env.VITE_API_URL}/downloads/${data.file_name}`);
+      setResultUrl(`${import.meta.env.VITE_HF_API}/downloads/${data.file_name}`);
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled.");

@@ -71,7 +71,7 @@ export default function BackgroundRemover() {
         formData.append("bg_image", bgImageFile);
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/api/remove-bg`, {
+      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/api/remove-bg`, {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
@@ -84,7 +84,7 @@ export default function BackgroundRemover() {
         throw new Error(data.detail || data.error || "Failed to process image");
       }
 
-      setResultImage(`${import.meta.env.VITE_API_URL}/downloads/${data.file_name}`);
+      setResultImage(`${import.meta.env.VITE_HF_API}/downloads/${data.file_name}`);
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");
