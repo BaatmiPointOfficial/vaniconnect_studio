@@ -235,7 +235,7 @@ export default function ClipCutPro() {
       formData.append("clip_duration", finalDurationSec.toString()); 
       formData.append("user_id", currentUser.uid);
 
-      const response = await fetch("http://127.0.0.1:8000/api/batch-split", {
+      const response = await fetch("https://yt-microservice-o8lu.onrender.com/api/batch-split", {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
