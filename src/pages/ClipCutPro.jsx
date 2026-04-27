@@ -182,7 +182,8 @@ export default function ClipCutPro() {
       formData.append("text", overlayText);
       formData.append("user_id", currentUser.uid);
 
-      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/clipcut-pro`, {
+      const response = await fetch('https://yt-microservice-o8lu.onrender.com/api/clipcut-pro', {
+    
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
