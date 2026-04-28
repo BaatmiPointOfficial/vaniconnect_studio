@@ -175,16 +175,16 @@ export default function ClipCutPro() {
       const currentUser = auth.currentUser;
       if (!currentUser) throw new Error("Auth Error: Please Sign In to use the AI tools!");
 
-      const formData = new FormData();
-      formData.append("file", videoFile);
+     const formData = new FormData();
+      // 1. Change "file" to "video_file" so Python recognizes it!
+      formData.append("video_file", videoFile); 
       formData.append("start_time", startTime); 
       formData.append("end_time", endTime);    
       formData.append("text", overlayText);
       formData.append("user_id", currentUser.uid);
 
-      
-      const response = await fetch('https://yt-microservice-o8lu.onrender.com/api/batch-split', {
-   
+      // 2. Change this URL to your REAL Single-Clip endpoint (e.g., /api/trim)
+      const response = await fetch('https://yt-microservice-o8lu.onrender.com/api/YOUR_SINGLE_CLIP_ENDPOINT', {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
