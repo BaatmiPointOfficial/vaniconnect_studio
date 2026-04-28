@@ -196,7 +196,7 @@ export default function ClipCutPro() {
         throw new Error(data.detail || data.error || "Failed to process video");
       }
 
-      setResultMedia(`${import.meta.env.VITE_HF_API}/downloads/${data.file_name}`);
+     setResultMedia(`https://yt-microservice-o8lu.onrender.com/downloads/${data.file_name}`);
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");
