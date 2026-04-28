@@ -249,7 +249,7 @@ const response = await fetch('https://yt-microservice-o8lu.onrender.com/api/trim
         throw new Error(data.detail || data.error || "Failed to batch split video");
       }
 
-      setResultMedia(`http://127.0.0.1:8000/downloads/${data.file_name}`);
+      setResultMedia(`https://yt-microservice-o8lu.onrender.com/downloads/${data.file_name}`);
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");
