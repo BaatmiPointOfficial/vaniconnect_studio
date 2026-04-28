@@ -184,7 +184,7 @@ export default function ClipCutPro() {
       formData.append("user_id", currentUser.uid);
 
       // 2. Change this URL to your REAL Single-Clip endpoint (e.g., /api/trim)
-      const response = await fetch('https://yt-microservice-o8lu.onrender.com/api/batch-split', {
+const response = await fetch('https://yt-microservice-o8lu.onrender.com/api/trim-single', {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
