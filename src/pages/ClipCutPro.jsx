@@ -182,8 +182,9 @@ export default function ClipCutPro() {
       formData.append("text", overlayText);
       formData.append("user_id", currentUser.uid);
 
-      const response = await fetch('https://yt-microservice-o8lu.onrender.com/api/clipcut-pro', {
-    
+      
+      const response = await fetch('https://yt-microservice-o8lu.onrender.com/api/batch-split', {
+   
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
