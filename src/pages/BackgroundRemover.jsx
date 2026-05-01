@@ -71,7 +71,7 @@ export default function BackgroundRemover() {
         formData.append("bg_image", bgImageFile);
       }
 
-      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/api/remove-bg`, {
+      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/remove-bg`, {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
