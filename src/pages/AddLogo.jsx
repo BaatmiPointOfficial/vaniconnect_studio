@@ -60,7 +60,7 @@ export default function AddLogo() {
       // 🌟 2. THE PIPELINE: Send the real Google UID to Python!
       formData.append("user_id", currentUser.uid);
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/add-custom-logo`, {
+      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/add-custom-logo`, {
         method: "POST",
         body: formData
       });
@@ -72,7 +72,7 @@ export default function AddLogo() {
         throw new Error(data.detail || data.error || "Failed to brand");
       }
 
-      setResultMedia(`${import.meta.env.VITE_API_URL}/downloads/${data.file_name}`);
+      setResultMedia(`${import.meta.env.VITE_HF_API}/downloads/${data.file_name}`);
     } catch (error) {
       if (error.message.includes("PaywallTrigger")) {
         // ✨ Catch the Paywall Error Cleanly

@@ -71,11 +71,19 @@ export default function BackgroundRemover() {
         formData.append("bg_image", bgImageFile);
       }
 
-      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/remove-bg`, {
+      const response = await fetch(`https://vaniconnect-vaniconnect-api.hf.space/api/remove-bg`, {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
       });
+
+      // 🛡️ THE SHIELD: If the server returns a 404 or an HTML page, catch it before it crashes!
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+          const rawText = await response.text();
+          console.error("🚨 Server sent non-JSON response:", rawText);
+          throw new Error("Server connection error. Check the F12 console for details.");
+      }
 
       const data = await response.json();
       
