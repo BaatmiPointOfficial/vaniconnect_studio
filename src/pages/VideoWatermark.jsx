@@ -122,7 +122,7 @@ export default function VideoWatermark() {
         return;
       }
 
-      const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/create-order`, {
+      const orderResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -139,7 +139,7 @@ export default function VideoWatermark() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/verify-payment`, {
+          const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -242,6 +242,28 @@ export default function VideoWatermark() {
     setVideoFile(null);
     setVideoUrl(null);
     setSelection(null);
+  };
+
+  // 🌟 THE BULLETPROOF DOWNLOAD HACK (Adapted for Video!)
+  const handleForceDownload = async () => {
+    if (!resultVideo) return;
+    try {
+      const response = await fetch(resultVideo);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = "VaniConnect_Cleaned_Video.mp4"; // <-- Changed to .mp4!
+      document.body.appendChild(link);
+      link.click();
+      
+      link.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Force download failed:", error);
+      alert("Browser blocked the download. Please right-click the video and click 'Save Video As...'");
+    }
   };
 
   return (
@@ -486,9 +508,10 @@ export default function VideoWatermark() {
                 <video src={resultVideo} controls autoPlay className="w-full max-h-[400px] object-contain" />
               </div>
               <p className="text-slate-600 font-medium mb-6">Your video has been successfully processed by the Python engine.</p>
-              <a href={resultVideo} target="_blank" rel="noreferrer" download className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
-                <Download size={20} className="mr-2" /> Download Clean Video
-              </a>
+              {/* REPLACE the <a> tag at the bottom with this: */}
+<button onClick={handleForceDownload} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
+  <Download size={20} className="mr-2" /> Download Clean Video
+</button>
             </div>
           </div>
         )}
