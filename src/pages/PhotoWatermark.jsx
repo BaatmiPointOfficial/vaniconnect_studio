@@ -4,15 +4,7 @@ import { Eraser, Image as ImageIcon, UploadCloud, Settings, AlertCircle, CheckCi
 import { auth } from '../firebase.js'; 
 import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
 
-<SEO
 
-  title="Auto Brand Watermark | Protect Your Content"
-
-  description="Protect your original content. Auto-stamp your custom logo and text onto photos and videos with exact coordinate precision."
-
-  keywords="add watermark to video, auto watermark, protect video copyright, bulk video watermark, logo stamper"
-
-/>
 
 export default function PhotoWatermark() {
   const [photoFile, setPhotoFile] = useState(null);
@@ -132,7 +124,8 @@ export default function PhotoWatermark() {
         return;
       }
 
-      const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/create-order`, {
+      // ✅ To this exact line:
+const orderResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -149,7 +142,8 @@ export default function PhotoWatermark() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/verify-payment`, {
+          // ✅ To this exact line:
+const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
