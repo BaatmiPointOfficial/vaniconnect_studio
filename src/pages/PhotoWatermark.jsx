@@ -260,6 +260,30 @@ const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-pa
     setResultPhoto(null);
     setSelection(null);
   };
+  const handleForceDownload = async () => {
+    if (!resultPhoto) return;
+    try {
+      // 1. Fetch the image data directly behind the scenes
+      const response = await fetch(resultPhoto);
+      const blob = await response.blob();
+      
+      // 2. Create a temporary local URL that the browser trusts
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      // 3. Create an invisible link, click it, and destroy it
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = "VaniConnect_Cleaned.jpg"; 
+      document.body.appendChild(link);
+      link.click();
+      
+      link.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Force download failed:", error);
+      alert("Browser blocked the download. Please right-click the image and click 'Save Image As...'");
+    }
+  };
 
   return (
     <>
@@ -505,9 +529,9 @@ const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-pa
                <img src={resultPhoto} alt="Cleaned Result" className="max-h-[400px] object-contain" />
              </div>
              <p className="text-slate-600 font-medium mb-6">Your photo has been successfully processed by the Python engine.</p>
-             <a href={resultPhoto} target="_blank" rel="noreferrer" download className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
-               <Download size={20} className="mr-2" /> Download Clean Image
-             </a>
+             <button onClick={handleForceDownload} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
+  <Download size={20} className="mr-2" /> Download Clean Image
+</button>
            </div>
          </div>
        )}
