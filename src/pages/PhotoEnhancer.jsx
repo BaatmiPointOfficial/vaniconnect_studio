@@ -4,20 +4,6 @@ import { UploadCloud, Wand2, AlertCircle, CheckCircle2, Download, SlidersHorizon
 import { auth } from '../firebase.js'; 
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-<SEO
-
-  title="AI Photo Enhancer & Upscaler | Restore Blurry Images"
-
-  description="Rescue blurry images instantly. Use local neural networks to upscale resolution, restore lost details, and sharpen faces."
-
-  keywords="photo enhancer, upscale image, fix blurry photo, ai image resolution, 4k photo upscaler"
-
-/>
-
-
-
-
-
 export default function PhotoEnhancer() {
   const [dragActive, setDragActive] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -115,7 +101,8 @@ export default function PhotoEnhancer() {
         return;
       }
 
-      const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/create-order`, {
+      // ✅ To this:
+const orderResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
