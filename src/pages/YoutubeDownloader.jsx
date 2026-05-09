@@ -129,47 +129,54 @@ export default function Downloader() {
   };
 
   const handleDownload = async (e) => {
-    e.preventDefault();
-    if (!url.trim()) return;
-    
-    setIsProcessing(true);
-    setErrorMsg('');
-    setDownloadLink(null);
+    e.preventDefault();
+    if (!url.trim()) return;
 
-    try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) throw new Error("Auth Error: Please Sign In to use the AI tools!");
+    // 🛡️ THE BOUNCER: Check if it is a YouTube link before doing anything else
+    const urlToCheck = url.trim().toLowerCase();
+    if (!urlToCheck.includes("youtube.com") && !urlToCheck.includes("youtu.be")) {
+      setErrorMsg("🚀 Instagram & Facebook support is upgrading! Check back in V1.2. For now, please paste a YouTube link.");
+      return; // Stops the function completely so it doesn't hit your backend
+    }
+    
+    setIsProcessing(true);
+    setErrorMsg('');
+    setDownloadLink(null);
 
-      const formData = new FormData();
-      formData.append("url", url);
-      formData.append("quality", quality); 
-      formData.append("user_id", currentUser.uid);
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) throw new Error("Auth Error: Please Sign In to use the AI tools!");
 
-      const response = await fetch(`${import.meta.env.VITE_RENDER_API}/api/download`, {
-        method: "POST",
-        body: formData
-      });
+      const formData = new FormData();
+      formData.append("url", url);
+      formData.append("quality", quality); 
+      formData.append("user_id", currentUser.uid);
 
-      const data = await response.json();
-      
-      if (!response.ok || data.error) throw new Error(data.detail || data.error || "Failed to download video.");
+      const response = await fetch(`${import.meta.env.VITE_RENDER_API}/api/download`, {
+        method: "POST",
+        body: formData
+      });
 
-      setDownloadLink(`${import.meta.env.VITE_RENDER_API}/downloads/${data.file_name}`);
-      setVideoTitle(data.title);
-      setThumbnailUrl(data.thumbnail);
-      setIsAudioOnly(data.is_audio);
+      const data = await response.json();
+      
+      if (!response.ok || data.error) throw new Error(data.detail || data.error || "Failed to download video.");
 
-    } catch (error) {
-      if (error.message && error.message.includes("PaywallTrigger")) {
-        setShowUpgradeModal(true);
-      } else {
-        console.error("Bridge Error:", error);
-        setErrorMsg(error.message || "Could not connect to the Python Engine.");
-      }
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+      setDownloadLink(`${import.meta.env.VITE_RENDER_API}/downloads/${data.file_name}`);
+      setVideoTitle(data.title);
+      setThumbnailUrl(data.thumbnail);
+      setIsAudioOnly(data.is_audio);
+
+    } catch (error) {
+      if (error.message && error.message.includes("PaywallTrigger")) {
+        setShowUpgradeModal(true);
+      } else {
+        console.error("Bridge Error:", error);
+        setErrorMsg(error.message || "Could not connect to the Python Engine.");
+      }
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const handleForceDownload = async () => {
     if (!downloadLink) return;
