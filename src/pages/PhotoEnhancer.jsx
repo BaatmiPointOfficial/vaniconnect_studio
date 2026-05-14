@@ -4,6 +4,9 @@ import { UploadCloud, Wand2, AlertCircle, CheckCircle2, Download, SlidersHorizon
 import { auth } from '../firebase.js'; 
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
+// 🚀 THE RENDER GATEWAY (For Payments)
+const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
+
 export default function PhotoEnhancer() {
   const [dragActive, setDragActive] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -83,7 +86,7 @@ export default function PhotoEnhancer() {
     });
   };
 
-  const handleCheckout = async () => {
+const handleCheckout = async () => {
     const currentUser = auth.currentUser; 
     
     if (!currentUser) {
@@ -101,8 +104,8 @@ export default function PhotoEnhancer() {
         return;
       }
 
-      // ✅ To this:
-const orderResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/create-order`, {
+      // 🛑 ROUTED TO RENDER: The Cashier handles the order creation
+      const orderResponse = await fetch(`${RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -112,14 +115,16 @@ const orderResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/create-ord
       if (!orderData.order_id) throw new Error("Server failed to create order.");
 
       const options = {
-       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderData.amount,
         currency: orderData.currency,
         name: "VaniConnect Studio",
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-payment`, {
+          
+          // 🛑 ROUTED TO RENDER: The Cashier verifies the signature securely
+          const verifyResponse = await fetch(`${RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -216,36 +221,7 @@ const orderResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/create-ord
       alert("Could not download the file automatically.");
     }
   };
-  const handleAITool = async (imageFile) => {
-  // 🛑 THE BOUNCER: Check the VIP List first!
-  if (!isProUser) {
-    // If they haven't paid, stop them and pop open the Razorpay window!
-    setShowUpgradeModal(true); 
-    return; 
-  }
 
-  // ✅ VIP GRANTED: Send it to Hugging Face
-  setIsProcessing(true);
-  try {
-    const formData = new FormData();
-    formData.append("file", imageFile);
-
-    // Notice we use the HF_API here, not Render!
-    const response = await fetch(`${import.meta.env.VITE_HF_API}/process-image`, {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-    setResultImage(data.output_url);
-
-  } catch (error) {
-    console.error("Hugging Face Error:", error);
-    setErrorMsg("AI Processing failed. Please try again.");
-  } finally {
-    setIsProcessing(false);
-  }
-};
 
   return (
     <>
