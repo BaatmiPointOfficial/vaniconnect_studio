@@ -13,7 +13,7 @@ import { getFirestore, doc, getDoc } from 'firebase/firestore';
   keywords="video clipper, ai shorts generator, podcast to shorts, video trimmer free, split video online"
 
 />
-
+const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
 export default function ClipCutPro() {
   const [dragActive, setDragActive] = useState(false);
   const [videoFile, setVideoFile] = useState(null);
@@ -109,7 +109,8 @@ export default function ClipCutPro() {
         return;
       }
 
-      const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/create-order`, {
+      const orderResponse = await fetch(`${RENDER_API}/api/create-order`, { 
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -126,7 +127,7 @@ export default function ClipCutPro() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/verify-payment`, {
+          const verifyResponse = await fetch(`${RENDER_API}/api/verify-payment`, { 
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
