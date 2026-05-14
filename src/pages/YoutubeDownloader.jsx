@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { DownloadCloud, Link as LinkIcon, AlertCircle, Globe, Download, Settings2, Music, Lock, Crown, X, CheckCircle2, Zap } from 'lucide-react';
 import { auth } from '../firebase.js'; 
 import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
-
+const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
 export default function Downloader() {
   const [url, setUrl] = useState('');
   const [quality, setQuality] = useState('720p'); 
@@ -76,7 +76,7 @@ export default function Downloader() {
         return;
       }
 
-      const orderResponse = await fetch(`${import.meta.env.VITE_RENDER_API}/api/create-order`, {
+      const orderResponse = await fetch(`${RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -93,7 +93,7 @@ export default function Downloader() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_RENDER_API}/api/verify-payment`, {
+          const verifyResponse = await fetch(`${RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -152,7 +152,7 @@ export default function Downloader() {
       formData.append("quality", quality); 
       formData.append("user_id", currentUser.uid);
 
-      const response = await fetch(`${import.meta.env.VITE_RENDER_API}/api/download`, {
+    const response = await fetch(`${RENDER_API}/api/download`, {
         method: "POST",
         body: formData
       });
