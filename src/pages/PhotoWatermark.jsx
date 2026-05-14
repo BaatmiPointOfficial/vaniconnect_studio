@@ -1,6 +1,6 @@
 import SEO from '../components/SEO';
 import React, { useState, useRef, useEffect } from 'react';
-import { Eraser, Image as ImageIcon, UploadCloud, AlertCircle, CheckCircle2, Download, X, Sparkles, MousePointer2, Lock, Crown, Zap } from 'lucide-react';
+import { Eraser, Image as ImageIcon, UploadCloud, Settings, AlertCircle, CheckCircle2, Download, X, Sparkles, MousePointer2, Lock, Crown, Zap } from 'lucide-react'; 
 import { auth } from '../firebase.js'; 
 import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
 
