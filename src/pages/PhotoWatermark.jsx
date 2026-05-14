@@ -1,36 +1,39 @@
 import SEO from '../components/SEO';
 import React, { useState, useRef, useEffect } from 'react';
-import { Eraser, Image as ImageIcon, UploadCloud, Settings, AlertCircle, CheckCircle2, Download, X, Sparkles, MousePointer2, Lock, Crown, Zap } from 'lucide-react';
+import { Eraser, Image as ImageIcon, UploadCloud, AlertCircle, CheckCircle2, Download, X, Sparkles, MousePointer2, Lock, Crown, Zap } from 'lucide-react';
 import { auth } from '../firebase.js'; 
 import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
 
-
+// 🌟 THE MASTER CHECKOUT MODAL
+import PaywallModal from '../components/PaywallModal.jsx'; 
 
 export default function PhotoWatermark() {
+  // --- STATE VARIABLES ---
   const [photoFile, setPhotoFile] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [resultPhoto, setResultPhoto] = useState(null);
   
-  const [mode, setMode] = useState("manual"); 
+  const [mode, setMode] = useState("manual"); // "manual" or "auto"
   
+  // Drawing state for manual mode
   const [selection, setSelection] = useState(null); 
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
 
+  // Refs
   const fileInputRef = useRef(null);
   const abortControllerRef = useRef(null);
   const imageRef = useRef(null); 
 
+  // Paywall State
   const [isProUser, setIsProUser] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   
-  // 🌟 NEW STATE FOR RAZORPAY LOADING
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  
   const db = getFirestore();
 
+  // --- 🌟 VIP LIST CHECKER ---
   useEffect(() => {
     const checkProStatus = async () => {
       if (auth.currentUser) {
@@ -47,7 +50,8 @@ export default function PhotoWatermark() {
     return () => unsubscribe();
   }, [db]);
 
-  const handleBrowseClick = () => fileInputRef.current.click();
+  // --- FILE HANDLING ---
+  const handleBrowseClick = () => fileInputRef.current?.click();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -60,7 +64,9 @@ export default function PhotoWatermark() {
     }
   };
 
+  // --- 🛑 THE UI BOUNCER ---
   const handleModeSelect = (selectedMode) => {
+    // Stop free users from clicking "Auto"
     if (selectedMode === 'auto' && !isProUser) {
       setShowUpgradeModal(true); 
       return;
@@ -69,8 +75,9 @@ export default function PhotoWatermark() {
     setSelection(null);
   };
 
+  // --- MANUAL DRAWING LOGIC ---
   const handleMouseDown = (e) => {
-    if (isProcessing || mode === "auto") return; 
+    if (isProcessing || mode === "auto" || resultPhoto) return; 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -80,7 +87,7 @@ export default function PhotoWatermark() {
   };
 
   const handleMouseMove = (e) => {
-    if (!isDrawing || isProcessing || mode === "auto") return;
+    if (!isDrawing || isProcessing || mode === "auto" || resultPhoto) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const currentX = e.clientX - rect.left;
     const currentY = e.clientY - rect.top;
@@ -95,89 +102,7 @@ export default function PhotoWatermark() {
 
   const handleMouseUp = () => setIsDrawing(false);
 
-  // 🌟 RAZORPAY CHECKOUT LOGIC ADDED HERE
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
-
-  const handleCheckout = async () => {
-    const currentUser = auth.currentUser; 
-    
-    if (!currentUser) {
-      alert("Please sign in to upgrade!");
-      return;
-    }
-
-    setIsProcessingPayment(true);
-
-    try {
-      const res = await loadRazorpayScript();
-      if (!res) {
-        alert("Razorpay SDK failed to load. Are you online?");
-        setIsProcessingPayment(false);
-        return;
-      }
-
-      // ✅ To this exact line:
-const orderResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/create-order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: currentUser.uid })
-      });
-      const orderData = await orderResponse.json();
-
-      if (!orderData.order_id) throw new Error("Server failed to create order.");
-
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: "VaniConnect Studio",
-        description: "Studio Pro Upgrade",
-        order_id: orderData.order_id,
-        handler: async function (response) {
-          // ✅ To this exact line:
-const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-payment`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              user_id: currentUser.uid
-            })
-          });
-
-          const verifyData = await verifyResponse.json();
-          if (verifyData.status === "success") {
-            alert("🎉 Payment Successful! Welcome to VaniConnect Pro!");
-            window.location.reload(); 
-          }
-        },
-        prefill: {
-          name: currentUser.displayName || "User",
-          email: currentUser.email || "",
-        },
-        theme: { color: "#3b82f6" } // Blue-500 to match your tool's theme
-      };
-
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-      
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong initializing the checkout.");
-    } finally {
-      setIsProcessingPayment(false);
-    }
-  };
-
+  // --- 🚀 THE MASTER AI REQUEST ---
   const handleCleanPhoto = async () => {
     if (!photoFile) return;
     setIsProcessing(true);
@@ -239,6 +164,7 @@ const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-pa
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");
       } else if (error.message && error.message.includes("PaywallTrigger")) {
+        // 🛑 THE SERVER BOUNCER: Python says out of credits! Pop the modal!
         setShowUpgradeModal(true); 
       } else {
         console.error("Bridge Error:", error);
@@ -259,18 +185,17 @@ const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-pa
     setPhotoUrl(null);
     setResultPhoto(null);
     setSelection(null);
+    setErrorMsg('');
   };
+
+  // --- DOWNLOAD OVERRIDE ---
   const handleForceDownload = async () => {
     if (!resultPhoto) return;
     try {
-      // 1. Fetch the image data directly behind the scenes
       const response = await fetch(resultPhoto);
       const blob = await response.blob();
-      
-      // 2. Create a temporary local URL that the browser trusts
       const blobUrl = window.URL.createObjectURL(blob);
       
-      // 3. Create an invisible link, click it, and destroy it
       const link = document.createElement('a');
       link.href = blobUrl;
       link.download = "VaniConnect_Cleaned.jpg"; 
