@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { X, Zap, Crown, CheckCircle2 } from 'lucide-react';
-// 🚨 IMPORTANT: Make sure this path points to your actual firebase config file!
 import { auth } from "../firebase";
 
-export default function PaywallModal({ isOpen, onClose }) {
+// 🚀 THE BULLETPROOF RENDER GATEWAY
+const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
+
+export default function PaywallModal({ onClose }) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const loadRazorpayScript = () => {
@@ -35,7 +37,7 @@ export default function PaywallModal({ isOpen, onClose }) {
       }
 
       // 1. Create the Order via Python Backend
-     const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/create-order`, {
+      const orderResponse = await fetch(`${RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -46,7 +48,7 @@ export default function PaywallModal({ isOpen, onClose }) {
 
       // 2. Open Razorpay Window
       const options = {
-        key: "rzp_test_SfizNz9HbWwVaK", // 🚨 PASTE YOUR REAL TEST KEY ID HERE!
+        key: "rzp_test_SfizNz9HbWwVaK", // Test Key
         amount: orderData.amount,
         currency: orderData.currency,
         name: "VaniConnect Studio",
@@ -54,7 +56,7 @@ export default function PaywallModal({ isOpen, onClose }) {
         order_id: orderData.order_id,
         handler: async function (response) {
           // 3. Verify and Update Firebase via Python Backend
-          const verifyResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/verify-payment`, {
+          const verifyResponse = await fetch(`${RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -68,7 +70,7 @@ export default function PaywallModal({ isOpen, onClose }) {
           const verifyData = await verifyResponse.json();
           if (verifyData.status === "success") {
             alert("🎉 Payment Successful! Welcome to VaniConnect Pro!");
-            window.location.reload(); // Reload the page to unlock Pro features!
+            window.location.reload(); 
           }
         },
         prefill: {
@@ -88,8 +90,6 @@ export default function PaywallModal({ isOpen, onClose }) {
       setIsProcessing(false);
     }
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
