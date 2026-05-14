@@ -265,6 +265,36 @@ export default function VideoWatermark() {
       alert("Browser blocked the download. Please right-click the video and click 'Save Video As...'");
     }
   };
+  const handleAITool = async (imageFile) => {
+  // 🛑 THE BOUNCER: Check the VIP List first!
+  if (!isProUser) {
+    // If they haven't paid, stop them and pop open the Razorpay window!
+    setShowUpgradeModal(true); 
+    return; 
+  }
+
+  // ✅ VIP GRANTED: Send it to Hugging Face
+  setIsProcessing(true);
+  try {
+    const formData = new FormData();
+    formData.append("file", imageFile);
+
+    // Notice we use the HF_API here, not Render!
+    const response = await fetch(`${import.meta.env.VITE_HF_API}/process-image`, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+    setResultImage(data.output_url);
+
+  } catch (error) {
+    console.error("Hugging Face Error:", error);
+    setErrorMsg("AI Processing failed. Please try again.");
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
   return (
     <>

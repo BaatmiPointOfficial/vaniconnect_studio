@@ -8,6 +8,9 @@ import { UploadCloud, Image as ImageIcon, AlertCircle, CheckCircle2, Download, P
   description="Instantly strip away backgrounds from products and portraits with AI. Get crisp, professional studio colors or transparent PNGs with zero cloud-lag."
   keywords="background remover, remove bg, transparent background maker, ai photo cutout, free background eraser"
 />
+
+
+
 export default function BackgroundRemover() {
   const [dragActive, setDragActive] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -141,6 +144,36 @@ export default function BackgroundRemover() {
     setBgImageFile(null);
     setBgImageUrl(null);
   };
+  const handleAITool = async (imageFile) => {
+  // 🛑 THE BOUNCER: Check the VIP List first!
+  if (!isProUser) {
+    // If they haven't paid, stop them and pop open the Razorpay window!
+    setShowUpgradeModal(true); 
+    return; 
+  }
+
+  // ✅ VIP GRANTED: Send it to Hugging Face
+  setIsProcessing(true);
+  try {
+    const formData = new FormData();
+    formData.append("file", imageFile);
+
+    // Notice we use the HF_API here, not Render!
+    const response = await fetch(`${import.meta.env.VITE_HF_API}/process-image`, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+    setResultImage(data.output_url);
+
+  } catch (error) {
+    console.error("Hugging Face Error:", error);
+    setErrorMsg("AI Processing failed. Please try again.");
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
   return (
     <div className="pt-10 pb-24 px-6 md:px-12 max-w-7xl mx-auto h-full flex flex-col overflow-y-auto no-scrollbar">
