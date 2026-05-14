@@ -1,15 +1,9 @@
 import SEO from '../components/SEO';
-import { auth } from '../firebase.js';
-import React, { useState, useRef } from 'react';
+import { auth, db } from '../firebase.js'; // Make sure db is imported!
+import { doc, getDoc } from 'firebase/firestore'; 
+import React, { useState, useRef, useEffect } from 'react';
 import { UploadCloud, Image as ImageIcon, AlertCircle, CheckCircle2, Download, Palette, FileImage, Layers } from 'lucide-react';
-
-<SEO 
-  title="Free AI Background Remover | HD Photo Cutout"
-  description="Instantly strip away backgrounds from products and portraits with AI. Get crisp, professional studio colors or transparent PNGs with zero cloud-lag."
-  keywords="background remover, remove bg, transparent background maker, ai photo cutout, free background eraser"
-/>
-
-
+// import UpgradeModal from './UpgradeModal'; // UNCOMMENT THIS ONCE YOUR MODAL IS READY
 
 export default function BackgroundRemover() {
   const [dragActive, setDragActive] = useState(false);
@@ -20,14 +14,37 @@ export default function BackgroundRemover() {
   const [resultImage, setResultImage] = useState(null);
 
   // 🌟 PRO FEATURES STATE
-  const [bgStrategy, setBgStrategy] = useState("transparent"); // "transparent", "color", "image"
+  const [bgStrategy, setBgStrategy] = useState("transparent"); 
   const [bgColor, setBgColor] = useState("#ffffff");
   const [bgImageFile, setBgImageFile] = useState(null);
   const [bgImageUrl, setBgImageUrl] = useState(null);
 
+  // 🛑 BOUNCER STATES (Added these!)
+  const [isProUser, setIsProUser] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
   const fileInputRef = useRef(null);
   const bgFileInputRef = useRef(null);
-  const abortControllerRef = useRef(null); // Added this back just in case!
+  const abortControllerRef = useRef(null); 
+
+  // 🧠 FIREBASE VIP CHECKER (Added this so it knows who is pro!)
+  useEffect(() => {
+    const checkProStatus = async () => {
+      if (auth.currentUser) {
+        const userRef = doc(db, 'users', auth.currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          setIsProUser(userSnap.data().isProUser || false);
+        }
+      }
+    };
+    
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) checkProStatus();
+    });
+    
+    return () => unsubscribe();
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -47,40 +64,47 @@ export default function BackgroundRemover() {
     }
   };
 
+  // 🚀 THE MASTER FUNCTION
   const handleRemoveBackground = async () => {
     if (!imageFile) return;
+    
+    // 🛑 1. SECURITY CHECK: Is the user logged in?
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      setErrorMsg("Auth Error: Please Sign In to use the AI tools!");
+      return;
+    }
+
+    // 🛑 2. THE BOUNCER: Are they a Pro user?
+    if (!isProUser) {
+      setShowUpgradeModal(true); // Pops open Razorpay!
+      return; 
+    }
+
+    // ✅ VIP GRANTED: Run the processing
     setIsProcessing(true);
     setErrorMsg('');
     setResultImage(null);
     abortControllerRef.current = new AbortController();
 
     try {
-      // 🛑 1. SECURITY CHECK: Is the user logged in?
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        throw new Error("Auth Error: Please Sign In to use the AI tools!");
-      }
-
       const formData = new FormData();
       formData.append("file", imageFile);
-      
-      // 🌟 2. THE PIPELINE: Send the real Google UID to Python!
       formData.append("user_id", currentUser.uid);
 
-      // 🌟 Append Pro Features if selected
       if (bgStrategy === "color") {
         formData.append("bg_color", bgColor);
       } else if (bgStrategy === "image" && bgImageFile) {
         formData.append("bg_image", bgImageFile);
       }
 
+      // NOTE: Using your Hugging Face URL from your code
       const response = await fetch(`https://vaniconnect-vaniconnect-api.hf.space/api/remove-bg`, {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
       });
 
-      // 🛡️ THE SHIELD: If the server returns a 404 or an HTML page, catch it before it crashes!
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
           const rawText = await response.text();
@@ -90,22 +114,20 @@ export default function BackgroundRemover() {
 
       const data = await response.json();
       
-      // 🛑 3. PAYWALL CATCHER: FastAPI sends errors inside 'data.detail'
       if (!response.ok) {
         throw new Error(data.detail || data.error || "Failed to process image");
       }
 
+      // Automatically grabs the output from your HF space
       setResultImage(`${import.meta.env.VITE_HF_API}/downloads/${data.file_name}`);
+      
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");
       } else {
         console.error("Bridge Error:", error);
-        
-        // If it's our Paywall error, make it look clean
         if (error.message.includes("PaywallTrigger")) {
-           setErrorMsg("Out of credits! Please click the Pro button to upgrade.");
-           // Optional: You could even trigger your setIsPaywallOpen(true) here!
+           setShowUpgradeModal(true);
         } else {
            setErrorMsg(error.message || "Failed to connect to Python server.");
         }
@@ -115,7 +137,6 @@ export default function BackgroundRemover() {
     }
   };
   
-  // 🌟 Smart Download Hack (Knows if it's PNG or JPEG)
   const handleForceDownload = async () => {
     if (!resultImage) return;
     try {
@@ -144,36 +165,8 @@ export default function BackgroundRemover() {
     setBgImageFile(null);
     setBgImageUrl(null);
   };
-  const handleAITool = async (imageFile) => {
-  // 🛑 THE BOUNCER: Check the VIP List first!
-  if (!isProUser) {
-    // If they haven't paid, stop them and pop open the Razorpay window!
-    setShowUpgradeModal(true); 
-    return; 
-  }
 
-  // ✅ VIP GRANTED: Send it to Hugging Face
-  setIsProcessing(true);
-  try {
-    const formData = new FormData();
-    formData.append("file", imageFile);
-
-    // Notice we use the HF_API here, not Render!
-    const response = await fetch(`${import.meta.env.VITE_HF_API}/process-image`, {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-    setResultImage(data.output_url);
-
-  } catch (error) {
-    console.error("Hugging Face Error:", error);
-    setErrorMsg("AI Processing failed. Please try again.");
-  } finally {
-    setIsProcessing(false);
-  }
-};
+  
 
   return (
     <div className="pt-10 pb-24 px-6 md:px-12 max-w-7xl mx-auto h-full flex flex-col overflow-y-auto no-scrollbar">
