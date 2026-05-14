@@ -4,6 +4,8 @@ import { Eraser, FileVideo2, UploadCloud, Settings, AlertCircle, CheckCircle2, D
 import { auth } from '../firebase.js'; 
 import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
 
+const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
+
 export default function VideoWatermark() {
   const [videoFile, setVideoFile] = useState(null);
   const [videoUrl, setVideoUrl] = useState(null); 
@@ -104,6 +106,10 @@ export default function VideoWatermark() {
     });
   };
 
+// 🚀 THE RENDER GATEWAY (For Payments)
+  const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
+
+  // 🌟 RAZORPAY CHECKOUT LOGIC
   const handleCheckout = async () => {
     const currentUser = auth.currentUser; 
     
@@ -122,7 +128,8 @@ export default function VideoWatermark() {
         return;
       }
 
-      const orderResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/create-order`, {
+      // 🛑 CHANGED TO RENDER_API: Send payment requests to the Render Cashier!
+      const orderResponse = await fetch(`${RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -139,7 +146,9 @@ export default function VideoWatermark() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-payment`, {
+          
+          // 🛑 CHANGED TO RENDER_API: Verify payments on Render!
+          const verifyResponse = await fetch(`${RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -160,7 +169,7 @@ export default function VideoWatermark() {
           name: currentUser.displayName || "User",
           email: currentUser.email || "",
         },
-        theme: { color: "#9333ea" } // 🌟 Updated to Purple-600 to match the tool's brand
+        theme: { color: "#9333ea" } 
       };
 
       const paymentObject = new window.Razorpay(options);
@@ -173,7 +182,6 @@ export default function VideoWatermark() {
       setIsProcessingPayment(false);
     }
   };
-
   const handleCleanFootage = async () => {
     if (!videoFile) return;
     setIsProcessing(true);
@@ -265,36 +273,9 @@ export default function VideoWatermark() {
       alert("Browser blocked the download. Please right-click the video and click 'Save Video As...'");
     }
   };
-  const handleAITool = async (imageFile) => {
-  // 🛑 THE BOUNCER: Check the VIP List first!
-  if (!isProUser) {
-    // If they haven't paid, stop them and pop open the Razorpay window!
-    setShowUpgradeModal(true); 
-    return; 
-  }
 
-  // ✅ VIP GRANTED: Send it to Hugging Face
-  setIsProcessing(true);
-  try {
-    const formData = new FormData();
-    formData.append("file", imageFile);
 
-    // Notice we use the HF_API here, not Render!
-    const response = await fetch(`${import.meta.env.VITE_HF_API}/process-image`, {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-    setResultImage(data.output_url);
-
-  } catch (error) {
-    console.error("Hugging Face Error:", error);
-    setErrorMsg("AI Processing failed. Please try again.");
-  } finally {
-    setIsProcessing(false);
-  }
-};
+ 
 
   return (
     <>
