@@ -87,7 +87,6 @@ export default function VideoEnhancer() {
         return;
       }
 
-      // 🛑 FIXED: Sent to RENDER_API instead of Hugging Face!
       const orderResponse = await fetch(`${RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -105,7 +104,6 @@ export default function VideoEnhancer() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          // 🛑 FIXED: Sent to RENDER_API instead of Hugging Face!
           const verifyResponse = await fetch(`${RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -139,18 +137,19 @@ export default function VideoEnhancer() {
       
     } catch (error) {
       console.error(error);
-      alert("Something went wrong initializing the checkout.");
+      alert("Checkout failed. Please check your connection.");
       setIsProcessingPayment(false);
     }
   };
 
   // --- 🛑 PRO ACTION BOUNCER ---
-  const handleProToggle = (setter, currentValue) => {
+  // If a free user clicks a Pro button, it triggers Razorpay instantly!
+  const handleProAction = (action) => {
     if (!isProUser) {
-      handleCheckout(); // Pops open Razorpay directly!
+      handleCheckout(); 
       return;
     }
-    setter(!currentValue);
+    action();
   };
 
   // --- 🚀 THE MASTER AI REQUEST ---
@@ -172,7 +171,6 @@ export default function VideoEnhancer() {
       formData.append("denoise", denoise ? "true" : "false");
       formData.append("user_id", currentUser.uid);
 
-      // Sent securely to Hugging Face for the heavy lifting
       const response = await fetch(`${import.meta.env.VITE_HF_API}/api/enhance-video`, {
         method: "POST",
         body: formData,
@@ -210,7 +208,6 @@ export default function VideoEnhancer() {
     setErrorMsg('');
   };
 
-  // --- DOWNLOAD OVERRIDE ---
   const handleForceDownload = async () => {
     if (!resultVideo) return;
     try {
@@ -255,8 +252,6 @@ export default function VideoEnhancer() {
     </div>
   );
 
-  
-
   return (
     <>
       <SEO 
@@ -265,85 +260,6 @@ export default function VideoEnhancer() {
         keywords="video enhancer, upscale video, 4k 60fps ai, fix blurry video, video quality enhancer"
       />
       <div className="w-full h-full animate-in fade-in duration-700 pt-8 pb-12 px-6 md:px-10 max-w-7xl mx-auto overflow-y-auto no-scrollbar relative">
-        
-       {/* 🌟 THE BULLETPROOF & MOBILE-OPTIMIZED PREMIUM MODAL */}
-        {showUpgradeModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4">
-            <div className="bg-white rounded-[2rem] max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-300 relative overflow-hidden flex flex-col">
-
-              <button 
-                type="button"
-                onClick={(e) => { 
-                  e.preventDefault(); 
-                  e.stopPropagation(); 
-                  setShowUpgradeModal(false); 
-                }} 
-                className="absolute top-3 right-3 sm:top-4 sm:right-4 z-[200] cursor-pointer text-white/80 hover:text-white transition-all bg-white/20 hover:bg-white/40 p-2 rounded-full pointer-events-auto"
-              >
-                <X size={20} />
-              </button>
-
-              {/* 🌟 MATCHED ORANGE/AMBER THEME */}
-              <div className="bg-gradient-to-br from-orange-500 via-amber-500 to-rose-500 p-6 pb-8 sm:p-8 sm:pb-10 flex flex-col items-center relative text-center pt-10 sm:pt-12">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center mb-3 sm:mb-4 shadow-inner border border-white/30">
-                  <Crown size={28} className="sm:w-8 sm:h-8" />
-                </div>
-                
-                <h2 className="text-xl sm:text-2xl font-black text-white mb-1.5 sm:mb-2 tracking-tight">Unlock Pro Power</h2>
-                
-                <p className="text-white/90 font-medium text-xs sm:text-sm">
-                  4K 60FPS Enhancement is a Premium Tool!
-                </p>
-              </div>
-
-              <div className="p-6 sm:p-8 pt-5 sm:pt-6 bg-white">
-                
-                <p className="text-slate-600 text-center font-medium mb-5 sm:mb-6 text-xs sm:text-sm leading-relaxed">
-                  Upgrade to Pro to unlock unlimited GPU processing, buttery 60 FPS interpolation, and full 4K UHD upscaling.
-                </p>
-
-                <div className="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8">
-                  {[
-                    "Unlimited AI Video Usage",
-                    "Max Quality 4K Downloads",
-                    "Priority Local GPU Processing",
-                    "No Daily Restrictions"
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center text-xs sm:text-sm font-bold text-slate-700">
-                      <CheckCircle2 size={16} className="text-emerald-500 mr-2.5 shrink-0 sm:w-[18px] sm:h-[18px]" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                {/* 🌟 THE WIRED-UP RAZORPAY BUTTON WITH ORANGE THEME */}
-                <button 
-                  onClick={handleCheckout}
-                  disabled={isProcessingPayment}
-                  className="w-full py-3.5 sm:py-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-black text-base sm:text-lg shadow-lg shadow-orange-500/30 hover:-translate-y-1 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Zap size={18} className="sm:w-5 sm:h-5 fill-current" /> 
-                  {isProcessingPayment ? "Loading Gateway..." : "Upgrade to Pro — ₹299/mo"}
-                </button>
-                
-                <button 
-                  type="button"
-                  onClick={() => setShowUpgradeModal(false)} 
-                  className="w-full text-center mt-3 sm:mt-4 text-[11px] sm:text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
-                >
-                  Maybe later, close this
-                </button>
-
-                <div className="mt-5 sm:mt-6 text-center border-t border-slate-100 pt-3 sm:pt-4">
-                  <a href="/pricing" className="text-orange-600 hover:text-orange-700 text-[11px] sm:text-xs font-extrabold transition-colors">
-                    View all 15+ Pro Features & Limits →
-                  </a>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        )}
 
         {/* HEADER */}
         <div className="mb-10">
@@ -487,16 +403,11 @@ export default function VideoEnhancer() {
         )}
 
         {resultVideo && (
-          <div className="mt-10 pt-8 border-t border-white/60 animate-in slide-in-from-bottom-4 duration-500 max-w-3xl mx-auto">
-            <h3 className="text-xl font-extrabold text-slate-800 mb-4 flex items-center"><CheckCircle2 className="text-emerald-500 mr-2" /> Video Processed Successfully!</h3>
-            <div className="bg-white/50 p-6 rounded-2xl border border-white/80 text-center flex flex-col items-center">
-              <div className="w-full rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 mb-6 bg-black flex justify-center">
-                <video src={resultVideo} controls className="max-h-[500px] w-full" />
-              </div>
-              <button onClick={handleForceDownload} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
-                <Download size={20} className="mr-2" /> Download Enhanced Video
-              </button>
-            </div>
+          <div className="mt-10 pt-8 border-t border-white/60 animate-in slide-in-from-bottom-4 duration-500 max-w-3xl mx-auto text-center">
+            <h3 className="text-xl font-extrabold text-slate-800 mb-6 flex items-center justify-center"><CheckCircle2 className="text-emerald-500 mr-2" /> Video Processed Successfully!</h3>
+            <button onClick={handleForceDownload} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
+              <Download size={20} className="mr-2" /> Download Enhanced Video
+            </button>
           </div>
         )}
 
