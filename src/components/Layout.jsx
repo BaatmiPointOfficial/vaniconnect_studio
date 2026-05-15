@@ -54,9 +54,9 @@ export default function Layout({ children }) {
           <div className="mb-8">
             <p className="text-[11px] font-extrabold text-slate-500 uppercase tracking-widest mb-4 ml-3">Studio Engine</p>
             <nav className="space-y-2">
-              <Link onClick={() => setIsMobileOpen(false)} to="/studio/youtube-downloader" className={`flex items-center px-4 py-3 rounded-2xl transition-all duration-300 text-sm font-bold ${isActive('/studio/youtube-downloader') ? "bg-white text-purple-700 shadow-md border border-white" : "hover:bg-white/60 hover:text-slate-900 text-slate-600"}`}>
+             {/*  <Link onClick={() => setIsMobileOpen(false)} to="/studio/youtube-downloader" className={`flex items-center px-4 py-3 rounded-2xl transition-all duration-300 text-sm font-bold ${isActive('/studio/youtube-downloader') ? "bg-white text-purple-700 shadow-md border border-white" : "hover:bg-white/60 hover:text-slate-900 text-slate-600"}`}>
                 <Youtube size={18} strokeWidth={2.5} className={`mr-3 ${isActive('/studio/youtube-downloader') ? "text-purple-600" : "text-slate-400"}`} /> Downloader
-              </Link>
+              </Link>*/} 
               <Link onClick={() => setIsMobileOpen(false)} to="/studio/video-watermark" className={`flex items-center px-4 py-3 rounded-2xl transition-all duration-300 text-sm font-bold ${isActive('/studio/video-watermark') ? "bg-white text-purple-700 shadow-md border border-white" : "hover:bg-white/60 hover:text-slate-900 text-slate-600"}`}>
                 <Eraser size={18} strokeWidth={2.5} className={`mr-3 ${isActive('/studio/video-watermark') ? "text-purple-600" : "text-slate-400"}`} /> Video Watermark
               </Link>
