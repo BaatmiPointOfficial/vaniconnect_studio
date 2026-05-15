@@ -269,13 +269,7 @@ export default function PhotoWatermark() {
                 </div>
 
                 {/* 🌟 THE WIRED-UP RAZORPAY BUTTON */}
-                <button onClick={() => setShowUpgradeModal(true)}
-                  disabled={isProcessingPayment}
-                  className="w-full py-3.5 sm:py-4 bg-gradient-to-r from-indigo-500 to-violet-500 text-white rounded-xl font-black text-base sm:text-lg shadow-lg hover:-translate-y-1 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Zap size={18} className="sm:w-5 sm:h-5 fill-current" /> 
-                  {isProcessingPayment ? "Loading Gateway..." : "Upgrade to Pro — ₹299/mo"}
-                </button>
+                
                 
                 <button 
                   type="button"
