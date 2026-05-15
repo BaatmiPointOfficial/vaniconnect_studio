@@ -1,18 +1,8 @@
-
-
-
 import SEO from '../components/SEO';
 import React, { useState, useRef, useEffect } from 'react';
-import { UploadCloud, Video as VideoIcon, Settings, AlertCircle, CheckCircle2, Download, X, Zap, Lock, Crown } from 'lucide-react';
+import { UploadCloud, Video as VideoIcon, Settings, AlertCircle, CheckCircle2, Download, X, Zap, Lock, Crown, Sparkles } from 'lucide-react';
 import { auth } from '../firebase.js';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-
-<SEO 
-  title="AI Video Enhancer | Upscale to 4K 60FPS"
-  description="Mathematically enhance video frames. Auto-correct poor lighting, boost contrast, stabilize, and sharpen blurry footage."
-  keywords="video enhancer, upscale video, 4k 60fps ai, fix blurry video, video quality enhancer"
-/>
-
 
 export default function VideoEnhancer() {
   const [videoFile, setVideoFile] = useState(null);
@@ -23,20 +13,22 @@ export default function VideoEnhancer() {
   
   // 🌟 ENGINE PARAMETERS STATE
   const [resolution, setResolution] = useState("1080p FHD"); 
-  const [fps60, setFps60] = useState(true); 
+  const [fps60, setFps60] = useState(false); 
   const [denoise, setDenoise] = useState(true); 
 
   const fileInputRef = useRef(null);
   const abortControllerRef = useRef(null);
 
+  // Paywall States
   const [isProUser, setIsProUser] = useState(false);
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  
-  // 🌟 NEW STATE FOR RAZORPAY LOADING
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   
   const db = getFirestore();
 
+  // 🚀 THE BULLETPROOF RENDER GATEWAY
+  const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
+
+  // --- 🌟 VIP LIST CHECKER ---
   useEffect(() => {
     const checkProStatus = async () => {
       if (auth.currentUser) {
@@ -53,7 +45,8 @@ export default function VideoEnhancer() {
     return () => unsubscribe();
   }, [db]);
 
-  const handleBrowseClick = () => fileInputRef.current.click();
+  // --- FILE HANDLING ---
+  const handleBrowseClick = () => fileInputRef.current?.click();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -65,15 +58,7 @@ export default function VideoEnhancer() {
     }
   };
 
-  const handleProAction = (action) => {
-    if (!isProUser) {
-      setShowUpgradeModal(true); 
-      return;
-    }
-    action();
-  };
-
-  // 🌟 RAZORPAY CHECKOUT LOGIC ADDED HERE
+  // --- 🌟 RAZORPAY CHECKOUT LOGIC ---
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -102,7 +87,8 @@ export default function VideoEnhancer() {
         return;
       }
 
-      const orderResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/create-order`, {
+      // 🛑 FIXED: Sent to RENDER_API instead of Hugging Face!
+      const orderResponse = await fetch(`${RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -119,7 +105,8 @@ export default function VideoEnhancer() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          const verifyResponse = await fetch(`${import.meta.env.VITE_HF_API}/api/verify-payment`, {
+          // 🛑 FIXED: Sent to RENDER_API instead of Hugging Face!
+          const verifyResponse = await fetch(`${RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -140,20 +127,33 @@ export default function VideoEnhancer() {
           name: currentUser.displayName || "User",
           email: currentUser.email || "",
         },
-        theme: { color: "#f97316" } // Orange-500 to match the Video Enhancer theme
+        theme: { color: "#f97316" } // Orange-500
       };
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
       
+      paymentObject.on('payment.failed', function () {
+         setIsProcessingPayment(false);
+      });
+      
     } catch (error) {
       console.error(error);
       alert("Something went wrong initializing the checkout.");
-    } finally {
       setIsProcessingPayment(false);
     }
   };
 
+  // --- 🛑 PRO ACTION BOUNCER ---
+  const handleProToggle = (setter, currentValue) => {
+    if (!isProUser) {
+      handleCheckout(); // Pops open Razorpay directly!
+      return;
+    }
+    setter(!currentValue);
+  };
+
+  // --- 🚀 THE MASTER AI REQUEST ---
   const handleProcessVideo = async () => {
     if (!videoFile) return;
     setIsProcessing(true);
@@ -168,10 +168,11 @@ export default function VideoEnhancer() {
       const formData = new FormData();
       formData.append("file", videoFile);
       formData.append("resolution", resolution);
-      formData.append("fps_60", fps60);
-      formData.append("denoise", denoise);
+      formData.append("fps_60", fps60 ? "true" : "false");
+      formData.append("denoise", denoise ? "true" : "false");
       formData.append("user_id", currentUser.uid);
 
+      // Sent securely to Hugging Face for the heavy lifting
       const response = await fetch(`${import.meta.env.VITE_HF_API}/api/enhance-video`, {
         method: "POST",
         body: formData,
@@ -186,9 +187,10 @@ export default function VideoEnhancer() {
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");
-      } else if (error.message.includes("PaywallTrigger")) {
-        setShowUpgradeModal(true); 
+      } else if (error.message && error.message.includes("PaywallTrigger")) {
+        handleCheckout(); // Pops open Razorpay directly!
       } else {
+        console.error("Bridge Error:", error);
         setErrorMsg(error.message || "Could not connect to the Python Engine.");
       }
     } finally {
@@ -205,8 +207,10 @@ export default function VideoEnhancer() {
     setVideoFile(null);
     setVideoUrl(null);
     setResultVideo(null);
+    setErrorMsg('');
   };
 
+  // --- DOWNLOAD OVERRIDE ---
   const handleForceDownload = async () => {
     if (!resultVideo) return;
     try {
@@ -224,16 +228,17 @@ export default function VideoEnhancer() {
       alert("Could not download the file. Try right-clicking the video and saving!");
     }
   };
-  
 
+  // --- REUSABLE TOGGLE UI ---
   const ToggleSwitch = ({ label, enabled, onClick, isLocked }) => (
     <div 
       onClick={onClick}
-      className={`relative flex items-center justify-between p-4 rounded-2xl border-2 transition-all mt-4
+      className={`relative flex items-center justify-between p-4 rounded-2xl border-2 transition-all mt-3
         ${isLocked 
           ? 'bg-gradient-to-br from-amber-50 to-orange-100 border-amber-400 shadow-sm cursor-pointer hover:shadow-md' 
           : 'bg-white/60 border-slate-100 cursor-pointer hover:border-orange-200' 
         }
+        ${isProcessingPayment && isLocked ? 'opacity-50 cursor-wait' : ''}
       `}
     >
       {isLocked && (
@@ -242,13 +247,15 @@ export default function VideoEnhancer() {
         </div>
       )}
       <span className={`font-bold text-sm block ${isLocked ? 'text-amber-900' : 'text-slate-700'}`}>
-        {label}
+        {isProcessingPayment && isLocked ? "Loading Gateway..." : label}
       </span>
       <div className={`w-12 h-6 rounded-full p-1 transition-colors ${enabled ? 'bg-orange-500' : 'bg-slate-300'}`}>
         <div className={`w-4 h-4 bg-white rounded-full shadow-md transition-transform ${enabled ? 'translate-x-6' : 'translate-x-0'}`} />
       </div>
     </div>
   );
+
+  
 
   return (
     <>
