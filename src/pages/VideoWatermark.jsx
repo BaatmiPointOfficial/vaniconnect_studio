@@ -69,21 +69,31 @@ export default function VideoWatermark() {
     setSelection(null);
   };
 
-  const handleMouseDown = (e) => {
-    if (isProcessing || mode === "auto") return; 
+  // --- 🌟 UNIFIED TOUCH & MOUSE DRAWING LOGIC ---
+  const getCoordinates = (e) => {
+    if (e.touches && e.touches.length > 0) {
+      return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+    }
+    return { clientX: e.clientX, clientY: e.clientY };
+  };
+
+  const handleStart = (e) => {
+    if (isProcessing || mode === "auto" || resultVideo) return; 
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const coords = getCoordinates(e);
+    const x = coords.clientX - rect.left;
+    const y = coords.clientY - rect.top;
     setStartPos({ x, y });
     setSelection({ x, y, w: 0, h: 0 });
     setIsDrawing(true);
   };
 
-  const handleMouseMove = (e) => {
-    if (!isDrawing || isProcessing || mode === "auto") return;
+  const handleMove = (e) => {
+    if (!isDrawing || isProcessing || mode === "auto" || resultVideo) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const currentX = e.clientX - rect.left;
-    const currentY = e.clientY - rect.top;
+    const coords = getCoordinates(e);
+    const currentX = coords.clientX - rect.left;
+    const currentY = coords.clientY - rect.top;
 
     setSelection({
       x: Math.min(startPos.x, currentX),
@@ -93,7 +103,7 @@ export default function VideoWatermark() {
     });
   };
 
-  const handleMouseUp = () => setIsDrawing(false);
+  const handleEnd = () => setIsDrawing(false);
 
   // 🌟 RAZORPAY CHECKOUT LOGIC
   const loadRazorpayScript = () => {
@@ -106,10 +116,6 @@ export default function VideoWatermark() {
     });
   };
 
-// 🚀 THE RENDER GATEWAY (For Payments)
-  const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
-
-  // 🌟 RAZORPAY CHECKOUT LOGIC
   const handleCheckout = async () => {
     const currentUser = auth.currentUser; 
     
@@ -128,7 +134,7 @@ export default function VideoWatermark() {
         return;
       }
 
-      // 🛑 CHANGED TO RENDER_API: Send payment requests to the Render Cashier!
+      // 🛑 Send payment requests to the Render Cashier!
       const orderResponse = await fetch(`${RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -147,7 +153,7 @@ export default function VideoWatermark() {
         order_id: orderData.order_id,
         handler: async function (response) {
           
-          // 🛑 CHANGED TO RENDER_API: Verify payments on Render!
+          // 🛑 Verify payments on Render!
           const verifyResponse = await fetch(`${RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -182,6 +188,7 @@ export default function VideoWatermark() {
       setIsProcessingPayment(false);
     }
   };
+
   const handleCleanFootage = async () => {
     if (!videoFile) return;
     setIsProcessing(true);
@@ -273,9 +280,6 @@ export default function VideoWatermark() {
       alert("Browser blocked the download. Please right-click the video and click 'Save Video As...'");
     }
   };
-
-
- 
 
   return (
     <>
@@ -409,9 +413,16 @@ export default function VideoWatermark() {
                   )}
                 </div>
                 
+                {/* 🌟 TOUCH-NONE CLASS AND TOUCH LISTENERS ADDED HERE */}
                 <div 
-                  className={`relative rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 ${isProcessing || mode === "auto" ? 'cursor-default' : 'cursor-crosshair'}`}
-                  onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}
+                  className={`touch-none relative rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 ${isProcessing || mode === "auto" ? 'cursor-default' : 'cursor-crosshair'}`}
+                  onMouseDown={handleStart} 
+                  onMouseMove={handleMove} 
+                  onMouseUp={handleEnd} 
+                  onMouseLeave={handleEnd}
+                  onTouchStart={handleStart} 
+                  onTouchMove={handleMove} 
+                  onTouchEnd={handleEnd}
                 >
                   <video ref={videoRef} src={videoUrl} controls={!isProcessing} className="max-h-[500px] w-auto block pointer-events-none" />
                   
@@ -519,10 +530,9 @@ export default function VideoWatermark() {
                 <video src={resultVideo} controls autoPlay className="w-full max-h-[400px] object-contain" />
               </div>
               <p className="text-slate-600 font-medium mb-6">Your video has been successfully processed by the Python engine.</p>
-              {/* REPLACE the <a> tag at the bottom with this: */}
-<button onClick={handleForceDownload} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
-  <Download size={20} className="mr-2" /> Download Clean Video
-</button>
+              <button onClick={handleForceDownload} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
+                <Download size={20} className="mr-2" /> Download Clean Video
+              </button>
             </div>
           </div>
         )}
