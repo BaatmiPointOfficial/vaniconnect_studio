@@ -158,22 +158,31 @@ export default function PhotoWatermark() {
     setSelection(null);
   };
 
-  // --- MANUAL DRAWING LOGIC ---
-  const handleMouseDown = (e) => {
+  // --- UNIFIED TOUCH & MOUSE DRAWING LOGIC ---
+  const getCoordinates = (e) => {
+    if (e.touches && e.touches.length > 0) {
+      return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+    }
+    return { clientX: e.clientX, clientY: e.clientY };
+  };
+
+  const handleStart = (e) => {
     if (isProcessing || mode === "auto" || resultPhoto) return; 
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const coords = getCoordinates(e);
+    const x = coords.clientX - rect.left;
+    const y = coords.clientY - rect.top;
     setStartPos({ x, y });
     setSelection({ x, y, w: 0, h: 0 });
     setIsDrawing(true);
   };
 
-  const handleMouseMove = (e) => {
+  const handleMove = (e) => {
     if (!isDrawing || isProcessing || mode === "auto" || resultPhoto) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const currentX = e.clientX - rect.left;
-    const currentY = e.clientY - rect.top;
+    const coords = getCoordinates(e);
+    const currentX = coords.clientX - rect.left;
+    const currentY = coords.clientY - rect.top;
 
     setSelection({
       x: Math.min(startPos.x, currentX),
@@ -183,7 +192,7 @@ export default function PhotoWatermark() {
     });
   };
 
-  const handleMouseUp = () => setIsDrawing(false);
+  const handleEnd = () => setIsDrawing(false);
 
   // --- 🚀 THE MASTER AI REQUEST ---
   const handleCleanPhoto = async () => {
@@ -347,8 +356,14 @@ export default function PhotoWatermark() {
                </div>
                
                <div 
-                 className={`relative rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 ${isProcessing || mode === "auto" ? 'cursor-default' : 'cursor-crosshair'}`}
-                 onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}
+                 className={`touch-none relative rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 ${isProcessing || mode === "auto" ? 'cursor-default' : 'cursor-crosshair'}`}
+                 onMouseDown={handleStart} 
+                 onMouseMove={handleMove} 
+                 onMouseUp={handleEnd} 
+                 onMouseLeave={handleEnd}
+                 onTouchStart={handleStart} 
+                 onTouchMove={handleMove} 
+                 onTouchEnd={handleEnd}
                >
                  <img ref={imageRef} src={photoUrl} alt="Preview" draggable="false" className="max-h-[500px] w-auto block object-contain select-none" />
 
@@ -454,7 +469,7 @@ export default function PhotoWatermark() {
 
         {resultPhoto && (
           <div className="mt-10 pt-8 border-t border-white/60 animate-in slide-in-from-bottom-4 duration-500 max-w-3xl mx-auto">
-            <h3 className="text-xl font-extrabold text-slate-800 mb-4 flex items-center"><CheckCircle2 className="text-emerald-500 mr-2" /> Watermark Removed!</h3>
+            <h3 className="text-xl font-extrabold text-slate-800 mb-4 flex items-center"><CheckCircle2 className="textemerald-500 mr-2" /> Watermark Removed!</h3>
             <div className="bg-white/50 p-6 rounded-2xl border border-white/80 text-center flex flex-col items-center">
               <div className="w-full rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 mb-6 bg-slate-100 flex justify-center">
                 <img src={resultPhoto} alt="Cleaned Result" className="max-h-[400px] object-contain" />
