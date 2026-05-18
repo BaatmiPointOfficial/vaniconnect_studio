@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Clock, Mail, MessageCircle, Send, CheckCircle2 } from 'lucide-react';
+import { Clock, Mail, MapPin } from 'lucide-react';
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
