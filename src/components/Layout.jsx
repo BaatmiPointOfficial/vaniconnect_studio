@@ -29,10 +29,10 @@ export default function Layout({ children }) {
         <div className="p-8 mb-2">
           <Link to="/" className="flex items-center gap-3 group" onClick={() => setIsMobileOpen(false)}>
             <div className="w-10 h-10 bg-gradient-to-tr from-purple-600 to-rose-500 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-purple-500/30 transition-transform group-hover:scale-105">
-              V
+              C
             </div>
             <span className="text-2xl font-black text-slate-800 tracking-tight">
-              Vani<span className="text-purple-600">Connect.</span>
+              Clip<span className="text-purple-600">eto.</span>
             </span>
           </Link>
         </div>
