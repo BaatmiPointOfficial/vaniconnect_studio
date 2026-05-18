@@ -89,7 +89,7 @@ export default function Downloader() {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "VaniConnect Studio",
+        name: "Clipeto Studio",
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
@@ -106,7 +106,7 @@ export default function Downloader() {
 
           const verifyData = await verifyResponse.json();
           if (verifyData.status === "success") {
-            alert("🎉 Payment Successful! Welcome to VaniConnect Pro!");
+            alert("🎉 Payment Successful! Welcome to Clipeto Pro!");
             window.location.reload(); 
           }
         },

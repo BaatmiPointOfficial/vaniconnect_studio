@@ -148,7 +148,7 @@ export default function VideoWatermark() {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "VaniConnect Studio",
+        name: "Clipeto Studio",
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
@@ -167,7 +167,7 @@ export default function VideoWatermark() {
 
           const verifyData = await verifyResponse.json();
           if (verifyData.status === "success") {
-            alert("🎉 Payment Successful! Welcome to VaniConnect Pro!");
+            alert("🎉 Payment Successful! Welcome to Clipeto Pro!");
             window.location.reload(); 
           }
         },
@@ -269,7 +269,7 @@ export default function VideoWatermark() {
       
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = "VaniConnect_Cleaned_Video.mp4"; // <-- Changed to .mp4!
+      link.download = "Clipeto_Cleaned_Video.mp4"; // <-- Changed to .mp4!
       document.body.appendChild(link);
       link.click();
       

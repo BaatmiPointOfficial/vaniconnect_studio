@@ -29,7 +29,7 @@ export default function Studio() {
       const link = document.createElement('a');
       link.href = url;
       
-      const fileName = fileUrl.split('/').pop() || 'VaniConnect_File';
+      const fileName = fileUrl.split('/').pop() || 'Clipeto_File';
       link.download = fileName;
       
       document.body.appendChild(link);
@@ -317,7 +317,7 @@ export default function Studio() {
     formData.append("file", selectedFile);
     formData.append("start_sec", trimStart);
     formData.append("end_sec", trimEnd);
-    formData.append("text", overlayText || "VaniConnect AI"); // Fallback if text is empty
+    formData.append("text", overlayText || "Clipeto AI"); // Fallback if text is empty
 
     try {
       // 2. Send it to your local Python engine
@@ -916,7 +916,7 @@ const handleAddLogoProcess = async () => {
                   formData.append("file", selectedFile);
                   formData.append("start_sec", trimStart); // FIXED: Must match app.py (start_sec)
                   formData.append("end_sec", trimEnd);     // FIXED: Must match app.py (end_sec)
-                  formData.append("text", overlayText || "VaniConnect AI"); 
+                  formData.append("text", overlayText || "Clipeto AI"); 
                   
                   try {
                     // 1. Point the upload to your local engine
@@ -977,7 +977,7 @@ const handleAddLogoProcess = async () => {
   return (
 <div className="min-h-screen bg-gray-50 text-gray-900 p-10 font-sans">
 <div className="mb-12 text-center mt-10">
-<h1 className="text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 tracking-tight">VaniConnect Studio</h1>
+<h1 className="text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 tracking-tight">Clipeto Studio</h1>
 <p className="text-gray-500 text-lg font-medium">Your all-in-one automated workspace for processing media files.</p>
 </div>
 

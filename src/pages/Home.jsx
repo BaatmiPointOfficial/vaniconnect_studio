@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { DownloadCloud, Eraser, Sparkles, Film, Scissors, Layers, ArrowRight, Clock, Download } from 'lucide-react'; // Updated icons!
 
 <SEO 
-  title="VaniConnect Studio | Local AI Media Tools"
+  title="Clipeto Studio | Local AI Media Tools"
   description="Create with pure focus. A harmonious suite of local AI media tools designed to help you process, clean, and enhance your content with less stress."
   keywords="ai media tools, local ai, video enhancer, photo enhancer, background remover, vaniconnect studio"
 />
@@ -74,7 +74,7 @@ export default function Home() {
       <div className="text-center mb-16 mt-8">
         <div className="inline-flex items-center space-x-2 bg-white/50 backdrop-blur-md border border-white/60 px-4 py-2 rounded-full shadow-sm mb-6">
           <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-          <span className="text-sm font-bold text-slate-600">VaniConnect Studio 1.0</span> {/* Updated to 1.0 per our freeze! */}
+          <span className="text-sm font-bold text-slate-600">Clipeto Studio 1.0</span> {/* Updated to 1.0 per our freeze! */}
         </div>
         <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight mb-6">
           Create with <br className="hidden md:block" />

@@ -15,7 +15,7 @@ export default function PrivacyPolicy() {
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Privacy Policy</h1>
-              <p className="text-slate-500 font-medium mt-2">VaniConnect AI Studio</p>
+              <p className="text-slate-500 font-medium mt-2">Clipeto AI Studio</p>
             </div>
           </div>
           <div className="bg-white/50 px-5 py-2.5 rounded-xl border border-white/60 shadow-sm text-sm font-bold text-slate-600">
@@ -33,7 +33,7 @@ export default function PrivacyPolicy() {
             </h2>
             {/* Highlighted box for the most important point */}
             <p className="bg-white/50 p-6 rounded-2xl border border-white/60 shadow-sm">
-              At VaniConnect AI, your privacy is our highest priority. All media files uploaded to our servers are processed securely using 256-bit encryption. <strong className="text-slate-900">All uploaded files and processed results are automatically and permanently deleted from our servers within 24 hours.</strong>
+              At Clipeto AI, your privacy is our highest priority. All media files uploaded to our servers are processed securely using 256-bit encryption. <strong className="text-slate-900">All uploaded files and processed results are automatically and permanently deleted from our servers within 24 hours.</strong>
             </p>
           </section>
 

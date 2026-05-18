@@ -15,7 +15,7 @@ export default function TermsOfService() {
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Terms of Service</h1>
-              <p className="text-slate-500 font-medium mt-2">VaniConnect AI Studio</p>
+              <p className="text-slate-500 font-medium mt-2">Clipeto AI Studio</p>
             </div>
           </div>
           <div className="bg-white/50 px-5 py-2.5 rounded-xl border border-white/60 shadow-sm text-sm font-bold text-slate-600">
@@ -32,7 +32,7 @@ export default function TermsOfService() {
               Acceptance of Terms
             </h2>
             <p className="pl-11">
-              By accessing and using VaniConnect AI Studio, you accept and agree to be bound by the terms and provision of this agreement.
+              By accessing and using Clipeto AI Studio, you accept and agree to be bound by the terms and provision of this agreement.
             </p>
           </section>
 
@@ -42,7 +42,7 @@ export default function TermsOfService() {
               User Responsibilities & Content
             </h2>
             <p className="pl-11">
-              You are solely responsible for the media you upload. You agree <strong className="text-slate-900">not</strong> to use our services to process illegal, highly explicit, or copyrighted material that you do not have the rights to use. VaniConnect AI reserves the right to terminate accounts that violate these terms.
+              You are solely responsible for the media you upload. You agree <strong className="text-slate-900">not</strong> to use our services to process illegal, highly explicit, or copyrighted material that you do not have the rights to use. Clipeto AI reserves the right to terminate accounts that violate these terms.
             </p>
           </section>
 
@@ -77,7 +77,7 @@ export default function TermsOfService() {
               Service Availability
             </h2>
             <p className="pl-11">
-              While we strive for 99.9% uptime, VaniConnect AI is provided "as is". We are not liable for any temporary interruptions in service or loss of data (as all data is auto-deleted within 24 hours anyway).
+              While we strive for 99.9% uptime, Clipeto AI is provided "as is". We are not liable for any temporary interruptions in service or loss of data (as all data is auto-deleted within 24 hours anyway).
             </p>
           </section>
 

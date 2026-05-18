@@ -13,7 +13,7 @@ export default function About() {
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-rose-500">Pro-Level Media Editing</span>
         </h1>
         <p className="text-xl text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto">
-          We believe creating high-quality content shouldn't require an expensive PC or months of learning complex software. VaniConnect AI puts the power of an entire production studio right in your browser.
+          We believe creating high-quality content shouldn't require an expensive PC or months of learning complex software. Clipeto AI puts the power of an entire production studio right in your browser.
         </p>
       </div>
 
@@ -23,7 +23,7 @@ export default function About() {
           <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-8 tracking-tight">Our Story</h2>
           <div className="prose prose-lg text-slate-600 max-w-none space-y-6 font-medium leading-relaxed">
             <p>
-              VaniConnect AI was born out of frustration. As creators and engineers, we saw how much time was wasted on repetitive tasks like removing watermarks, enhancing blurry photos, and cutting videos. 
+              Clipeto AI was born out of frustration. As creators and engineers, we saw how much time was wasted on repetitive tasks like removing watermarks, enhancing blurry photos, and cutting videos. 
             </p>
             <p>
               We realized that Artificial Intelligence could completely automate these tedious workflows. Our goal was simple: build a centralized "AI Studio" where anyone—from local news agencies to solo YouTubers—could process their media files in seconds, securely and automatically.

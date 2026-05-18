@@ -96,7 +96,7 @@ export default function AddLogo() {
       
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = baseFile?.type.includes('video') ? "VaniConnect_Branded.mp4" : "VaniConnect_Branded.jpg"; 
+      link.download = baseFile?.type.includes('video') ? "Clipeto_Branded.mp4" : "Clipeto_Branded.jpg"; 
       document.body.appendChild(link);
       link.click();
       

@@ -15,7 +15,7 @@ export default function Footer() {
         <div className="flex items-center gap-2 text-center md:text-left">
           <Zap size={14} className="text-purple-500 fill-purple-500 hidden sm:block" />
           <p className="text-[11px] md:text-xs font-bold text-slate-500">
-            © {currentYear} VaniConnect Studio. <span className="opacity-70">A VaniConnect AI brand.</span>
+            © {currentYear} Clipeto Studio. <span className="opacity-70">A Clipeto AI brand.</span>
           </p>
         </div>
 

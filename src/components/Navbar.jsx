@@ -62,7 +62,7 @@ export default function Navbar() {
                 <Layers color="white" size={28} />
               </div>
               <span className="font-extrabold text-2xl tracking-tight text-gray-900 hidden sm:block">
-                VaniConnect <span className="text-blue-600">AI</span>
+                Clipeto <span className="text-blue-600">AI</span>
               </span>
             </Link>
           </div>

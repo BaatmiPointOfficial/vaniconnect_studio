@@ -26,7 +26,7 @@ export default function ClipCutPro() {
 
   const [startTime, setStartTime] = useState("00:00:00");
   const [endTime, setEndTime] = useState("00:00:10");
-  const [overlayText, setOverlayText] = useState("VaniConnect AI");
+  const [overlayText, setOverlayText] = useState("Clipeto AI");
 
   const [splitDuration, setSplitDuration] = useState(60);
   const [batchStrategy, setBatchStrategy] = useState("seconds"); 
@@ -123,7 +123,7 @@ export default function ClipCutPro() {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "VaniConnect Studio",
+        name: "Clipeto Studio",
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
@@ -140,7 +140,7 @@ export default function ClipCutPro() {
 
           const verifyData = await verifyResponse.json();
           if (verifyData.status === "success") {
-            alert("🎉 Payment Successful! Welcome to VaniConnect Pro!");
+            alert("🎉 Payment Successful! Welcome to Clipeto Pro!");
             window.location.reload(); 
           }
         },
@@ -281,7 +281,7 @@ const response = await fetch('https://yt-microservice-o8lu.onrender.com/api/trim
       link.href = blobUrl;
       
       const isZip = resultMedia.toLowerCase().endsWith('.zip');
-      link.download = isZip ? "VaniConnect_Batch.zip" : "VaniConnect_ClipPro.mp4"; 
+      link.download = isZip ? "Clipeto_Batch.zip" : "Clipeto_ClipPro.mp4"; 
       
       document.body.appendChild(link);
       link.click();

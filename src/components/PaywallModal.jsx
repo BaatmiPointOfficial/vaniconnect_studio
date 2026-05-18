@@ -49,7 +49,7 @@ export default function PaywallModal({ isOpen, onClose }) {
         key: "rzp_test_SfizNz9HbWwVaK", // 🚨 PASTE YOUR REAL TEST KEY ID HERE!
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "VaniConnect Studio",
+        name: "Clipeto Studio",
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
@@ -67,7 +67,7 @@ export default function PaywallModal({ isOpen, onClose }) {
 
           const verifyData = await verifyResponse.json();
           if (verifyData.status === "success") {
-            alert("🎉 Payment Successful! Welcome to VaniConnect Pro!");
+            alert("🎉 Payment Successful! Welcome to Clipeto Pro!");
             window.location.reload(); // Reload the page to unlock Pro features!
           }
         },
@@ -123,7 +123,7 @@ export default function PaywallModal({ isOpen, onClose }) {
           {/* Body Content */}
           <div className="p-5 md:p-8 flex-shrink-0 bg-white/40">
             <p className="text-slate-500 font-medium mb-5 md:mb-6 text-center text-xs md:text-sm leading-relaxed">
-              Upgrade to Pro to unlock unlimited power, batch processing, and priority speed across all VaniConnect Studio tools.
+              Upgrade to Pro to unlock unlimited power, batch processing, and priority speed across all Clipeto Studio tools.
             </p>
 
             <ul className="space-y-3 mb-6 md:mb-8">

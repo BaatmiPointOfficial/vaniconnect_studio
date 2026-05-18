@@ -146,7 +146,7 @@ export default function BackgroundRemover() {
       
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = bgStrategy === "transparent" ? "VaniConnect_Transparent.png" : "VaniConnect_Pro_BG.jpg"; 
+      link.download = bgStrategy === "transparent" ? "Clipeto_Transparent.png" : "Clipeto_Pro_BG.jpg"; 
       document.body.appendChild(link);
       link.click();
       
