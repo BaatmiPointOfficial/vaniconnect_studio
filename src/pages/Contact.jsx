@@ -99,15 +99,7 @@ export default function Contact() {
               <div className="flex items-center text-slate-700 font-bold bg-white/50 rounded-xl p-4 border border-white/80 shadow-sm">
                 <Mail className="text-rose-500 mr-3" size={24} /> support@vaniconnect.in
               </div>
-              <div className="mt-4 flex items-start gap-3 text-slate-600">
-  <MapPin size={20} className="text-purple-600 flex-shrink-0 mt-1" />
-  <p className="text-sm">
-    Clipeto AI Studio<br />
-    [Your Street/Building Name]<br />
-    Sangamner, Maharashtra [Your PIN Code]<br />
-    India
-  </p>
-</div>
+              
             </div>
           </div>
 
