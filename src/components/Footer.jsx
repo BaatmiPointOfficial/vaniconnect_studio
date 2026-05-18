@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Zap } from 'lucide-react';
@@ -32,6 +31,13 @@ export default function Footer() {
             className="text-[11px] md:text-xs font-extrabold text-slate-500 hover:text-purple-600 transition-colors uppercase tracking-wider"
           >
             Privacy
+          </Link>
+          {/* Added Refund Policy Link for Razorpay KYC */}
+          <Link 
+            to="/refund" 
+            className="text-[11px] md:text-xs font-extrabold text-slate-500 hover:text-purple-600 transition-colors uppercase tracking-wider"
+          >
+            Refund Policy
           </Link>
         </div>
 

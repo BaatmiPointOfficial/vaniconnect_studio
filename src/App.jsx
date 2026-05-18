@@ -11,6 +11,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
 import TermsOfService from './pages/TermsOfService.jsx'; 
 import Contact from './pages/Contact.jsx';
 import About from './pages/About.jsx';
+import RefundPolicy from './pages/RefundPolicy';
 
 // Import Studio Tools
 import YoutubeDownloader from './pages/YoutubeDownloader.jsx';
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/terms" element={<TermsOfService />} /> 
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
+          <Route path="/refund" element={<RefundPolicy />} />
           
           {/* Tool Routes */}
           <Route path="/studio/youtube-downloader" element={<YoutubeDownloader />} />
