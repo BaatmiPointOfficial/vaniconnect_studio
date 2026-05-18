@@ -88,20 +88,33 @@ export default function Contact() {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Support Hours Glass Card */}
-          <div className="bg-white/40 backdrop-blur-2xl rounded-[2.5rem] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.03)] border border-white/60">
-            <h3 className="text-2xl font-bold text-slate-800 mb-4 tracking-tight">Support Hours</h3>
-            <p className="text-slate-600 font-medium mb-6">Our technical team is available Monday through Friday to assist you.</p>
-            
-            <div className="space-y-4">
-              <div className="flex items-center text-slate-700 font-bold bg-white/50 rounded-xl p-4 border border-white/80 shadow-sm">
-                <Clock className="text-purple-600 mr-3" size={24} /> 9:00 AM - 6:00 PM (IST)
-              </div>
-              <div className="flex items-center text-slate-700 font-bold bg-white/50 rounded-xl p-4 border border-white/80 shadow-sm">
-                <Mail className="text-rose-500 mr-3" size={24} /> support@vaniconnect.in
-              </div>
-              
+        <div className="bg-white/40 backdrop-blur-2xl rounded-[2.5rem] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.03)] border border-white/60">
+          <h3 className="text-2xl font-bold text-slate-800 mb-4 tracking-tight">Support Hours</h3>
+          <p className="text-slate-600 font-medium mb-6">Our technical team is available Monday through Friday to assist you.</p>
+          
+          <div className="space-y-4">
+            <div className="flex items-center text-slate-700 font-bold bg-white/50 rounded-xl p-4 border border-white/80 shadow-sm">
+              <Clock className="text-purple-600 mr-3 flex-shrink-0" size={24} /> 
+              <span>9:00 AM - 6:00 PM (IST)</span>
             </div>
+            
+            <div className="flex items-center text-slate-700 font-bold bg-white/50 rounded-xl p-4 border border-white/80 shadow-sm">
+              <Mail className="text-rose-500 mr-3 flex-shrink-0" size={24} /> 
+              <span>support@clipeto.com</span>
+            </div>
+
+            {/* Added Physical Address for Razorpay KYC */}
+            <div className="flex items-start text-slate-700 font-bold bg-white/50 rounded-xl p-4 border border-white/80 shadow-sm">
+              <MapPin className="text-indigo-500 mr-3 mt-1 flex-shrink-0" size={24} />
+              <span className="leading-relaxed">
+                Clipeto AI Studio<br />
+                Sangamner, Maharashtra<br />
+                India
+              </span>
+            </div>
+            
           </div>
+        </div>
 
           {/* FAQ Glass Card */}
           <div className="bg-white/40 backdrop-blur-2xl rounded-[2.5rem] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.03)] border border-white/60">
