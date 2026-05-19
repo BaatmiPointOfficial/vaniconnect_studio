@@ -34,8 +34,8 @@ export default function PaywallModal({ isOpen, onClose }) {
         return;
       }
 
-      // 1. Create the Order via Python Backend
-     const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/create-order`, {
+      // 1. Create the Order via Live Python Backend
+      const orderResponse = await fetch(`https://yt-microservice-o8lu.onrender.com/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: currentUser.uid })
@@ -46,15 +46,15 @@ export default function PaywallModal({ isOpen, onClose }) {
 
       // 2. Open Razorpay Window
       const options = {
-        key: "rzp_test_SfizNz9HbWwVaK", // 🚨 PASTE YOUR REAL TEST KEY ID HERE!
+        key: "rzp_test_SfizNz9HbWwVaK", // 🚨 PASTE YOUR REAL TEST KEY ID HERE! (e.g., rzp_test_12345...)
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Clipeto Studio",
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          // 3. Verify and Update Firebase via Python Backend
-          const verifyResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/verify-payment`, {
+          // 3. Verify and Update Firebase via Live Python Backend
+          const verifyResponse = await fetch(`https://yt-microservice-o8lu.onrender.com/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
