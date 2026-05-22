@@ -459,39 +459,52 @@ export default function VideoWatermark() {
               
               <div className="mb-8">
                 <label className="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-3">Detection Mode</label>
+
+{/* 🌟 NEW MASTER WRAPPER: Forces everything to stack vertically */}
+<div className="flex flex-col gap-1 pt-2">
+  
+  {/* The Button Row (Keeps buttons side-by-side) */}
+  <div className="flex gap-3 mb-1">
+    
+    {/* 🌟 PRO BUTTON: AI AUTO WITH PREMIUM STYLING */}
+    <button 
+      type="button"
+      onClick={() => handleModeSelect("auto")}
+      className={`relative flex-1 py-3 px-4 rounded-xl font-bold text-sm border-2 flex items-center justify-center transition-all w-full
+        ${mode === "auto" 
+          ? 'border-purple-500 text-purple-700 bg-purple-50 shadow-sm z-10' 
+          : 'bg-gradient-to-br from-amber-50 to-orange-100 border-amber-400 text-amber-900 shadow-sm hover:shadow-md hover:border-amber-500'
+        }
+      `}
+    >
+      {!isProUser && mode !== "auto" && (
+        <div className="absolute -top-3 -right-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md z-20 flex items-center gap-1">
+          PRO <Lock size={10} />
+        </div>
+      )}
+      <Sparkles size={16} className="mr-2" /> AI Auto
+    </button>
+
+    {/* 🌟 FREE BUTTON: MANUAL */}
+    <button 
+      type="button"
+      onClick={() => handleModeSelect("manual")}
+      className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm border-2 flex items-center justify-center transition-all w-full
+        ${mode === "manual" ? 'border-purple-500 text-purple-700 bg-purple-50 shadow-sm' : 'border-transparent text-slate-600 bg-white/60 hover:bg-white shadow-sm'}`}
+    >
+      <MousePointer2 size={16} className="mr-2" /> Manual
+    </button>
+
+  </div>
+
+  {/* 🌟 THE NEW HELPER TEXT */}
+  <p className="text-[11px] text-slate-500 font-medium mt-2.5 mb-4 text-center flex items-center justify-center gap-1.5">
+    <span className="text-amber-500 text-sm">💡</span> AI Auto is optimized for text logos.
+  </p>
+
+</div>
+
                 
-                <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                  
-                  {/* 🌟 PRO BUTTON: AI AUTO WITH PREMIUM STYLING */}
-                  <button 
-                    type="button"
-                    onClick={() => handleModeSelect("auto")}
-                    className={`relative flex-1 py-3 px-4 rounded-xl font-bold text-sm border-2 flex items-center justify-center transition-all w-full
-                      ${mode === "auto" 
-                        ? 'border-purple-500 text-purple-700 bg-purple-50 shadow-sm z-10' 
-                        : 'bg-gradient-to-br from-amber-50 to-orange-100 border-amber-400 text-amber-900 shadow-sm hover:shadow-md hover:border-amber-500'
-                      }
-                    `}
-                  >
-                    {!isProUser && mode !== "auto" && (
-                      <div className="absolute -top-3 -right-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md z-20 flex items-center gap-1">
-                        PRO <Lock size={10} />
-                      </div>
-                    )}
-                    <Sparkles size={16} className="mr-2" /> AI Auto
-                  </button>
-
-                  {/* 🌟 FREE BUTTON: MANUAL */}
-                  <button 
-                    type="button"
-                    onClick={() => handleModeSelect("manual")}
-                    className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm border-2 flex items-center justify-center transition-all w-full
-                      ${mode === "manual" ? 'border-purple-500 text-purple-700 bg-purple-50 shadow-sm' : 'border-transparent text-slate-600 bg-white/60 hover:bg-white shadow-sm'}`}
-                  >
-                    <MousePointer2 size={16} className="mr-2" /> Manual
-                  </button>
-
-                </div>
               </div>
 
               {isProcessing ? (
