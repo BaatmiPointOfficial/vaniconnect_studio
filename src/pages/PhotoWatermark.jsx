@@ -403,7 +403,7 @@ export default function PhotoWatermark() {
               <div className="mb-8">
                 <label className="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-3">Selection Tool</label>
                 
-                <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                <div className="flex flex-col gap-1 pt-2">
                   
                  {/* WRAPPER FOR BOTH BUTTONS */}
 <div className="flex gap-3 mb-1">
