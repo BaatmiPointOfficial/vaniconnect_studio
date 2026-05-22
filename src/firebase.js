@@ -5,7 +5,7 @@ import { getFirestore } from "firebase/firestore"; // 🌟 1. IMPORT FIRESTORE
 const firebaseConfig = {
 
     apiKey: "AIzaSyC5_FPA55fRrvWZKzhl5Rg1oI85Vtq1mvc",
-  authDomain: "clipeto.com",
+  authDomain: "vanniconnect-studio.firebaseapp.com",
   projectId: "vanniconnect-studio",
   storageBucket: "vanniconnect-studio.firebasestorage.app",
   messagingSenderId: "43952554755",
