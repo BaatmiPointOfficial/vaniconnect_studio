@@ -192,12 +192,15 @@ export default function AddLogo() {
           )}
           
           <div className="flex gap-4 mt-6">
-            <input type="file" ref={baseInputRef} onChange={(e) => {
-              const file = e.target.files[0];
-              setBaseFile(file);
-              setBasePreview(URL.createObjectURL(file));
-              setResultMedia(null);accept="video/mp4,video/quicktime"
-            }} className="hidden"  />
+            <input type="file" ref={baseInputRef} 
+  accept="video/mp4,video/quicktime" 
+  onChange={(e) => {
+    const file = e.target.files[0];
+    setBaseFile(file);
+    setBasePreview(URL.createObjectURL(file));
+    setResultMedia(null);
+  }} 
+   className="hidden"  />
             <input type="file" ref={logoInputRef} onChange={(e) => {
               const file = e.target.files[0];
               setLogoFile(file);
