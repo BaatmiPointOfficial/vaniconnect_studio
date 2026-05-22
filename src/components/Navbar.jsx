@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Layers, Zap, Phone, Menu, X, Crown, ChevronDown, LogOut } from 'lucide-react';
 import { auth } from '../firebase.js';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+// 🌟 1. Changed getDoc to onSnapshot!
+import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
 
 export default function Navbar() {
   const location = useLocation();
@@ -16,23 +17,40 @@ export default function Navbar() {
   const db = getFirestore();
 
   useEffect(() => {
-    const fetchUserData = async (currentUser) => {
-      const userRef = doc(db, 'users', currentUser.uid);
-      const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        setIsProUser(data.isProUser || false);
-        if (!data.isProUser) {
-          setCredits(data.dailyCredits !== undefined ? data.dailyCredits : 5);
+    let unsubFirestore = null; // We need to store the database listener to turn it off later
+
+    const unsubAuth = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+      
+      if (currentUser) {
+        // 🌟 2. LIVE LISTENER: onSnapshot listens 24/7. When Python changes Firebase, this updates React instantly!
+        const userRef = doc(db, 'users', currentUser.uid);
+        unsubFirestore = onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setIsProUser(data.isProUser || false);
+            
+            if (!data.isProUser) {
+              // 🌟 3. FIELD FIX: Mapped to your actual database field 'free_credits'
+              setCredits(data.free_credits !== undefined ? data.free_credits : 5);
+            }
+          }
+        });
+      } else {
+        // If user logs out, reset state and turn off the database listener
+        setIsProUser(false);
+        setCredits(5);
+        if (unsubFirestore) {
+          unsubFirestore();
         }
       }
-    };
-
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      setUser(currentUser);
-      if (currentUser) fetchUserData(currentUser);
     });
-    return () => unsubscribe();
+
+    // Cleanup both listeners when the navbar closes/unmounts
+    return () => {
+      unsubAuth();
+      if (unsubFirestore) unsubFirestore();
+    };
   }, [db]);
 
   const handleSignOut = () => {
@@ -110,7 +128,7 @@ export default function Navbar() {
                   <div className="absolute top-full right-0 mt-3 w-64 sm:w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 p-5 animate-in slide-in-from-top-2">
                     <h4 className="font-extrabold text-slate-800 mb-1">Daily Usage Limits</h4>
                     <p className="text-xs font-medium text-slate-500 mb-4 pb-4 border-b border-slate-100">
-                      You have <strong className="text-slate-800">{credits} free credits</strong> remaining today. Credits reset every 24 hours.
+                      You have <strong className="text-slate-800">{credits} free credits</strong> remaining today.
                     </p>
                     
                     <div className="space-y-3 mb-5 text-sm font-bold text-slate-600">
