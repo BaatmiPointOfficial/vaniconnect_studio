@@ -22,9 +22,14 @@ export default function AddLogo() {
 
   const handleDrag = (e) => {
     if (!containerRef.current) return;
+    
+    // Grab the X and Y coordinates depending on if it's a touch or a mouse click!
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
     const rect = containerRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(e.clientX - rect.left - (logoSize / 2), rect.width - logoSize));
-    const y = Math.max(0, Math.min(e.clientY - rect.top - (logoSize / 2), rect.height - logoSize));
+    const x = Math.max(0, Math.min(clientX - rect.left - (logoSize / 2), rect.width - logoSize));
+    const y = Math.max(0, Math.min(clientY - rect.top - (logoSize / 2), rect.height - logoSize));
     setLogoPos({ x: Math.round(x), y: Math.round(y) });
   };
 
@@ -151,11 +156,21 @@ export default function AddLogo() {
           ) : (
             <div 
               ref={containerRef}
-              className="relative w-fit overflow-hidden rounded-2xl bg-black cursor-crosshair mx-auto"
+              // 🌟 Added "touch-none" here to prevent the phone from scrolling while dragging!
+              className="relative w-fit overflow-hidden rounded-2xl bg-black cursor-crosshair mx-auto touch-none"
+              
+              // Desktop Mouse Events
               onMouseDown={(e) => {
                 const move = (moveE) => handleDrag(moveE);
                 window.addEventListener('mousemove', move);
                 window.addEventListener('mouseup', () => window.removeEventListener('mousemove', move), { once: true });
+              }}
+              
+              // 📱 Mobile Touch Events
+              onTouchStart={(e) => {
+                const move = (moveE) => handleDrag(moveE);
+                window.addEventListener('touchmove', move, { passive: false });
+                window.addEventListener('touchend', () => window.removeEventListener('touchmove', move), { once: true });
               }}
             >
               {baseFile?.type.includes('video') ? (
