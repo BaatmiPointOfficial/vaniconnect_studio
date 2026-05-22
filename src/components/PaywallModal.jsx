@@ -46,7 +46,7 @@ export default function PaywallModal({ isOpen, onClose }) {
 
       // 2. Open Razorpay Window
       const options = {
-        key: "rzp_test_SfizNz9HbWwVaK", // 🚨 PASTE YOUR REAL TEST KEY ID HERE! (e.g., rzp_test_12345...)
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,// 🚨 PASTE YOUR REAL TEST KEY ID HERE! (e.g., rzp_test_12345...)
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Clipeto Studio",
