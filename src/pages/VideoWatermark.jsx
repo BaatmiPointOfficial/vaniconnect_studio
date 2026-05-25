@@ -221,7 +221,7 @@ export default function VideoWatermark() {
         }
       }
 
-      const response = await fetch(`${import.meta.env.VITE_HF_API}/api/remove-video-watermark`, {
+      const response = await fetch(`${RENDER_API}/api/remove-video-watermark`, {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
