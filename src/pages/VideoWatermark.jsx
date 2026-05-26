@@ -227,21 +227,19 @@ export default function VideoWatermark() {
         signal: abortControllerRef.current.signal 
       });
 
-     const data = await response.json();
+      const data = await response.json();
       
       if (!response.ok || data.error) {
         throw new Error(data.detail || data.error || "Failed to process video");
       }
 
       // --- ENTERPRISE QUEUE WAITING SYSTEM ---
-      // We got the Waiter's receipt! Now we listen to Firebase for the Chef to finish.
       const db = getFirestore();
       const videosRef = collection(db, "users", auth.currentUser.uid, "processed_videos");
 
-      let isInitialLoad = true; // This prevents React from accidentally loading an old video
+      let isInitialLoad = true; 
 
       const unsubscribe = onSnapshot(videosRef, (snapshot) => {
-        // Ignore the videos you processed yesterday
         if (isInitialLoad) {
           isInitialLoad = false;
           return; 
@@ -251,11 +249,10 @@ export default function VideoWatermark() {
           if (change.type === "added") {
             const videoData = change.doc.data();
             
-            // THE CHEF IS DONE! 
             if (videoData.status === "completed" && videoData.final_file_url) {
-              setResultVideo(videoData.final_file_url); // Put the Cloudflare R2 link in the player
-              setIsProcessing(false); // Turn off the loading spinner!
-              unsubscribe(); // Stop listening to Firebase
+              setResultVideo(videoData.final_file_url); 
+              setIsProcessing(false); 
+              unsubscribe(); 
             }
           }
         });
@@ -270,10 +267,8 @@ export default function VideoWatermark() {
         console.error("Bridge Error:", error);
         setErrorMsg(error.message || "Could not connect to the Python Engine.");
       }
-      setIsProcessing(false); // Stop the spinner if there is a crash
+      setIsProcessing(false); 
     } 
-    // IMPORTANT: Make sure you delete the old "finally { setIsProcessing(false); }" block!
-    // If you leave it, the UI will stop spinning while the AI is still cooking!
   };
   
   const handleCancel = () => {
@@ -287,7 +282,7 @@ export default function VideoWatermark() {
     setSelection(null);
   };
 
-  // 🌟 THE BULLETPROOF DOWNLOAD HACK (Adapted for Video!)
+  // 🌟 THE BULLETPROOF DOWNLOAD HACK
   const handleForceDownload = async () => {
     if (!resultVideo) return;
     try {
@@ -297,7 +292,7 @@ export default function VideoWatermark() {
       
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = "Clipeto_Cleaned_Video.mp4"; // <-- Changed to .mp4!
+      link.download = "Clipeto_Cleaned_Video.mp4"; 
       document.body.appendChild(link);
       link.click();
       
@@ -318,7 +313,7 @@ export default function VideoWatermark() {
       />
       <div className="w-full h-full animate-in fade-in duration-700 pt-8 pb-12 px-6 md:px-10 max-w-7xl mx-auto overflow-y-auto no-scrollbar relative">
         
-        {/* 🌟 THE BULLETPROOF & MOBILE-OPTIMIZED PREMIUM MODAL */}
+        {/* 🌟 PREMIUM MODAL */}
         {showUpgradeModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4">
             <div className="bg-white rounded-[2rem] max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-300 relative overflow-hidden flex flex-col">
@@ -335,21 +330,17 @@ export default function VideoWatermark() {
                 <X size={20} />
               </button>
 
-              {/* 🌟 MATCHED PURPLE/ROSE THEME */}
               <div className="bg-gradient-to-br from-purple-600 via-fuchsia-500 to-rose-500 p-6 pb-8 sm:p-8 sm:pb-10 flex flex-col items-center relative text-center pt-10 sm:pt-12">
                 <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center mb-3 sm:mb-4 shadow-inner border border-white/30">
                   <Crown size={28} className="sm:w-8 sm:h-8" />
                 </div>
-                
                 <h2 className="text-xl sm:text-2xl font-black text-white mb-1.5 sm:mb-2 tracking-tight">Unlock Pro Power</h2>
-                
                 <p className="text-white/90 font-medium text-xs sm:text-sm">
                   AI Video Auto-Detect is a Premium Tool!
                 </p>
               </div>
 
               <div className="p-6 sm:p-8 pt-5 sm:pt-6 bg-white">
-                
                 <p className="text-slate-600 text-center font-medium mb-5 sm:mb-6 text-xs sm:text-sm leading-relaxed">
                   Upgrade to Pro to unlock unlimited AI watermark detection, massive file processing, and priority GPU speed.
                 </p>
@@ -420,13 +411,10 @@ export default function VideoWatermark() {
                 <div className="w-24 h-24 bg-white shadow-xl shadow-purple-500/10 rounded-full flex items-center justify-center mb-8">
                   <UploadCloud size={40} className="text-purple-500" />
                 </div>
-                
                 <h3 className="text-2xl font-extrabold text-slate-800 mb-3 text-center">Drag & Drop Media</h3>
-                
                 <p className="text-slate-500 font-medium mb-8 text-center max-w-sm">
                   Support for MP4, MOV, and AVI. Up to 4K resolution.
                 </p>
-                
                 <button onClick={handleBrowseClick} className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg mx-auto">
                   <FileVideo2 size={18} /> Browse Files
                 </button>
@@ -441,7 +429,6 @@ export default function VideoWatermark() {
                   )}
                 </div>
                 
-                {/* 🌟 TOUCH-NONE CLASS AND TOUCH LISTENERS ADDED HERE */}
                 <div 
                   className={`touch-none relative rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 ${isProcessing || mode === "auto" ? 'cursor-default' : 'cursor-crosshair'}`}
                   onMouseDown={handleStart} 
@@ -487,52 +474,39 @@ export default function VideoWatermark() {
               
               <div className="mb-8">
                 <label className="block text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-3">Detection Mode</label>
+                <div className="flex flex-col gap-1 pt-2">
+                  <div className="flex gap-3 mb-1">
+                    <button 
+                      type="button"
+                      onClick={() => handleModeSelect("auto")}
+                      className={`relative flex-1 py-3 px-4 rounded-xl font-bold text-sm border-2 flex items-center justify-center transition-all w-full
+                        ${mode === "auto" 
+                          ? 'border-purple-500 text-purple-700 bg-purple-50 shadow-sm z-10' 
+                          : 'bg-gradient-to-br from-amber-50 to-orange-100 border-amber-400 text-amber-900 shadow-sm hover:shadow-md hover:border-amber-500'
+                        }
+                      `}
+                    >
+                      {!isProUser && mode !== "auto" && (
+                        <div className="absolute -top-3 -right-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md z-20 flex items-center gap-1">
+                          PRO <Lock size={10} />
+                        </div>
+                      )}
+                      <Sparkles size={16} className="mr-2" /> AI Auto
+                    </button>
 
-{/* 🌟 NEW MASTER WRAPPER: Forces everything to stack vertically */}
-<div className="flex flex-col gap-1 pt-2">
-  
-  {/* The Button Row (Keeps buttons side-by-side) */}
-  <div className="flex gap-3 mb-1">
-    
-    {/* 🌟 PRO BUTTON: AI AUTO WITH PREMIUM STYLING */}
-    <button 
-      type="button"
-      onClick={() => handleModeSelect("auto")}
-      className={`relative flex-1 py-3 px-4 rounded-xl font-bold text-sm border-2 flex items-center justify-center transition-all w-full
-        ${mode === "auto" 
-          ? 'border-purple-500 text-purple-700 bg-purple-50 shadow-sm z-10' 
-          : 'bg-gradient-to-br from-amber-50 to-orange-100 border-amber-400 text-amber-900 shadow-sm hover:shadow-md hover:border-amber-500'
-        }
-      `}
-    >
-      {!isProUser && mode !== "auto" && (
-        <div className="absolute -top-3 -right-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md z-20 flex items-center gap-1">
-          PRO <Lock size={10} />
-        </div>
-      )}
-      <Sparkles size={16} className="mr-2" /> AI Auto
-    </button>
-
-    {/* 🌟 FREE BUTTON: MANUAL */}
-    <button 
-      type="button"
-      onClick={() => handleModeSelect("manual")}
-      className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm border-2 flex items-center justify-center transition-all w-full
-        ${mode === "manual" ? 'border-purple-500 text-purple-700 bg-purple-50 shadow-sm' : 'border-transparent text-slate-600 bg-white/60 hover:bg-white shadow-sm'}`}
-    >
-      <MousePointer2 size={16} className="mr-2" /> Manual
-    </button>
-
-  </div>
-
-  {/* 🌟 THE NEW HELPER TEXT */}
-  <p className="text-[11px] text-slate-500 font-medium mt-2.5 mb-4 text-center flex items-center justify-center gap-1.5">
-    <span className="text-amber-500 text-sm">💡</span> AI Auto is optimized for text logos.
-  </p>
-
-</div>
-
-                
+                    <button 
+                      type="button"
+                      onClick={() => handleModeSelect("manual")}
+                      className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm border-2 flex items-center justify-center transition-all w-full
+                        ${mode === "manual" ? 'border-purple-500 text-purple-700 bg-purple-50 shadow-sm' : 'border-transparent text-slate-600 bg-white/60 hover:bg-white shadow-sm'}`}
+                    >
+                      <MousePointer2 size={16} className="mr-2" /> Manual
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-slate-500 font-medium mt-2.5 mb-4 text-center flex items-center justify-center gap-1.5">
+                    <span className="text-amber-500 text-sm">💡</span> AI Auto is optimized for text logos.
+                  </p>
+                </div>
               </div>
 
               {isProcessing ? (
@@ -563,12 +537,19 @@ export default function VideoWatermark() {
           </div>
         )}
 
+        {/* 🌟 BULLETPROOF MULTIMEDIA LOADER FIX */}
         {resultVideo && (
           <div className="mt-10 pt-8 border-t border-white/60 animate-in slide-in-from-bottom-4 duration-500 max-w-3xl mx-auto">
             <h3 className="text-xl font-extrabold text-slate-800 mb-4 flex items-center"><CheckCircle2 className="text-emerald-500 mr-2" /> Watermark Removed!</h3>
             <div className="bg-white/50 p-6 rounded-2xl border border-white/80 text-center flex flex-col items-center">
               <div className="w-full rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 mb-6 bg-black">
-                <video src={resultVideo} controls autoPlay className="w-full max-h-[400px] object-contain" />
+                <video 
+                  key={resultVideo} // 🚀 Force clean mount whenever url arrives!
+                  src={resultVideo} 
+                  controls 
+                  autoPlay 
+                  className="w-full max-h-[400px] object-contain" 
+                />
               </div>
               <p className="text-slate-600 font-medium mb-6">Your video has been successfully processed by the Python engine.</p>
               <button onClick={handleForceDownload} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
