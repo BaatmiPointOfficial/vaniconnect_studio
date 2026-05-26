@@ -2,7 +2,7 @@ import SEO from '../components/SEO';
 import React, { useState, useRef, useEffect } from 'react';
 import { Eraser, FileVideo2, UploadCloud, Settings, AlertCircle, CheckCircle2, Download, X, MousePointer2, Sparkles, Lock, Crown, Zap } from 'lucide-react';
 import { auth } from '../firebase.js'; 
-import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
+import { getFirestore, doc, getDoc, collection, onSnapshot } from 'firebase/firestore'; 
 
 const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
 
@@ -227,13 +227,40 @@ export default function VideoWatermark() {
         signal: abortControllerRef.current.signal 
       });
 
-      const data = await response.json();
+     const data = await response.json();
       
       if (!response.ok || data.error) {
         throw new Error(data.detail || data.error || "Failed to process video");
       }
 
-      setResultVideo(`${import.meta.env.VITE_HF_API}/downloads/${data.file_name}`);
+      // --- ENTERPRISE QUEUE WAITING SYSTEM ---
+      // We got the Waiter's receipt! Now we listen to Firebase for the Chef to finish.
+      const db = getFirestore();
+      const videosRef = collection(db, "users", auth.currentUser.uid, "processed_videos");
+
+      let isInitialLoad = true; // This prevents React from accidentally loading an old video
+
+      const unsubscribe = onSnapshot(videosRef, (snapshot) => {
+        // Ignore the videos you processed yesterday
+        if (isInitialLoad) {
+          isInitialLoad = false;
+          return; 
+        }
+
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            const videoData = change.doc.data();
+            
+            // THE CHEF IS DONE! 
+            if (videoData.status === "completed" && videoData.final_file_url) {
+              setResultVideo(videoData.final_file_url); // Put the Cloudflare R2 link in the player
+              setIsProcessing(false); // Turn off the loading spinner!
+              unsubscribe(); // Stop listening to Firebase
+            }
+          }
+        });
+      });
+
     } catch (error) {
       if (error.name === 'AbortError') {
         setErrorMsg("Process canceled by user.");
@@ -243,9 +270,10 @@ export default function VideoWatermark() {
         console.error("Bridge Error:", error);
         setErrorMsg(error.message || "Could not connect to the Python Engine.");
       }
-    } finally {
-      setIsProcessing(false);
-    }
+      setIsProcessing(false); // Stop the spinner if there is a crash
+    } 
+    // IMPORTANT: Make sure you delete the old "finally { setIsProcessing(false); }" block!
+    // If you leave it, the UI will stop spinning while the AI is still cooking!
   };
   
   const handleCancel = () => {
