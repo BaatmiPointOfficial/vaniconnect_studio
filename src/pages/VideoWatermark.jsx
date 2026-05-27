@@ -2,7 +2,7 @@ import SEO from '../components/SEO';
 import React, { useState, useRef, useEffect } from 'react';
 import { Eraser, FileVideo2, UploadCloud, Settings, AlertCircle, CheckCircle2, Download, X, MousePointer2, Sparkles, Lock, Crown, Zap } from 'lucide-react';
 import { auth } from '../firebase.js'; 
-import { getFirestore, doc, getDoc, collection, onSnapshot } from 'firebase/firestore'; 
+import { getFirestore, doc, getDoc, collection } from 'firebase/firestore'; 
 
 const RENDER_API = "https://yt-microservice-o8lu.onrender.com";
 
@@ -26,7 +26,6 @@ export default function VideoWatermark() {
   const [isProUser, setIsProUser] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   
-  // 🌟 STATE FOR RAZORPAY LOADING
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   
   const db = getFirestore();
@@ -69,7 +68,6 @@ export default function VideoWatermark() {
     setSelection(null);
   };
 
-  // --- 🌟 UNIFIED TOUCH & MOUSE DRAWING LOGIC ---
   const getCoordinates = (e) => {
     if (e.touches && e.touches.length > 0) {
       return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
@@ -105,7 +103,6 @@ export default function VideoWatermark() {
 
   const handleEnd = () => setIsDrawing(false);
 
-  // 🌟 RAZORPAY CHECKOUT LOGIC
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -118,7 +115,6 @@ export default function VideoWatermark() {
 
   const handleCheckout = async () => {
     const currentUser = auth.currentUser; 
-    
     if (!currentUser) {
       alert("Please sign in to upgrade!");
       return;
@@ -134,7 +130,6 @@ export default function VideoWatermark() {
         return;
       }
 
-      // 🛑 Send payment requests to the Render Cashier!
       const orderResponse = await fetch(`${RENDER_API}/api/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -152,8 +147,6 @@ export default function VideoWatermark() {
         description: "Studio Pro Upgrade",
         order_id: orderData.order_id,
         handler: async function (response) {
-          
-          // 🛑 Verify payments on Render!
           const verifyResponse = await fetch(`${RENDER_API}/api/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -189,6 +182,7 @@ export default function VideoWatermark() {
     }
   };
 
+  // 🛠️ THE COMPREHENSIVE DIRECT PROCESSING REWRITE
   const handleCleanFootage = async () => {
     if (!videoFile) return;
     setIsProcessing(true);
@@ -221,42 +215,44 @@ export default function VideoWatermark() {
         }
       }
 
-      const response = await fetch("https://vaniconnect-vaniconnect-api.hf.space/api/remove-video-watermark", {
+      // 🚀 Step 1: Query the proper prediction API route directly
+      const response = await fetch("https://vaniconnect-vaniconnect-api.hf.space/api/predict", {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
       });
 
       const data = await response.json();
+      console.log("📡 Direct Hugging Face Data Payload Response:", data);
       
       if (!response.ok || data.error) {
         throw new Error(data.detail || data.error || "Failed to process video");
       }
 
-      // --- ENTERPRISE QUEUE WAITING SYSTEM ---
-      const db = getFirestore();
-      const videosRef = collection(db, "users", auth.currentUser.uid, "processed_videos");
+      // 🚀 Step 2: Extract output values directly out of the real-time API response mapping structure
+      // Public Gradio spaces pass values back inside an explicit 'data' tuple or raw root strings
+      let generatedFilename = "";
+      if (data && data.data && data.data[0]) {
+         generatedFilename = typeof data.data[0] === 'object' ? data.data[0].name : data.data[0];
+      } else if (data && data.file_name) {
+         generatedFilename = data.file_name;
+      } else if (data && data.data) {
+         generatedFilename = data.data;
+      }
 
-      let isInitialLoad = true; 
+      if (!generatedFilename) {
+        throw new Error("Processing model succeeded but returned an unresolvable file target mapping string.");
+      }
 
-      const unsubscribe = onSnapshot(videosRef, (snapshot) => {
-        if (isInitialLoad) {
-          isInitialLoad = false;
-          return; 
-        }
+      // Step 3: Sanitize string formats and mount direct public download stream path
+      const cleanFilename = generatedFilename.replace("file=", "").replace("file/", "");
+      const finalGradioUrl = `https://vaniconnect-vaniconnect-api.hf.space/gradio_api/file/${cleanFilename}`;
+      
+      console.log("🔗 Connecting player component directly to target asset URL string:", finalGradioUrl);
 
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === "added") {
-            const videoData = change.doc.data();
-            
-            if (videoData.status === "completed" && videoData.final_file_url) {
-              setResultVideo(videoData.final_file_url); 
-              setIsProcessing(false); 
-              unsubscribe(); 
-            }
-          }
-        });
-      });
+      // Step 4: Inject file path directly into state to unlock your user download interface instantly!
+      setResultVideo(finalGradioUrl); 
+      setIsProcessing(false);
 
     } catch (error) {
       if (error.name === 'AbortError') {
@@ -282,7 +278,6 @@ export default function VideoWatermark() {
     setSelection(null);
   };
 
-  // 🌟 THE BULLETPROOF DOWNLOAD HACK
   const handleForceDownload = async () => {
     if (!resultVideo) return;
     try {
@@ -313,7 +308,7 @@ export default function VideoWatermark() {
       />
       <div className="w-full h-full animate-in fade-in duration-700 pt-8 pb-12 px-6 md:px-10 max-w-7xl mx-auto overflow-y-auto no-scrollbar relative">
         
-        {/* 🌟 PREMIUM MODAL */}
+        {/* PREMIUM MODAL */}
         {showUpgradeModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4">
             <div className="bg-white rounded-[2rem] max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-300 relative overflow-hidden flex flex-col">
@@ -426,7 +421,8 @@ export default function VideoWatermark() {
                     <><Sparkles size={16} className="text-purple-500" /> AI Auto-Detect Active (No drawing needed!)</>
                   ) : (
                     <><MousePointer2 size={16} className="text-purple-500" /> Draw a box over the watermark</>
-                  )}
+                  )
+                }
                 </div>
                 
                 <div 
@@ -537,14 +533,14 @@ export default function VideoWatermark() {
           </div>
         )}
 
-        {/* 🌟 BULLETPROOF MULTIMEDIA LOADER FIX */}
+        {/* EXPLICIT RESULT MULTIMEDIA DISPLAY PLAYER PANEL */}
         {resultVideo && (
           <div className="mt-10 pt-8 border-t border-white/60 animate-in slide-in-from-bottom-4 duration-500 max-w-3xl mx-auto">
             <h3 className="text-xl font-extrabold text-slate-800 mb-4 flex items-center"><CheckCircle2 className="text-emerald-500 mr-2" /> Watermark Removed!</h3>
             <div className="bg-white/50 p-6 rounded-2xl border border-white/80 text-center flex flex-col items-center">
               <div className="w-full rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 mb-6 bg-black">
                 <video 
-                  key={resultVideo} // 🚀 Force clean mount whenever url arrives!
+                  key={resultVideo} 
                   src={resultVideo} 
                   controls 
                   autoPlay 
