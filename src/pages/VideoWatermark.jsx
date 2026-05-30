@@ -215,40 +215,31 @@ export default function VideoWatermark() {
         }
       }
 
-      // 🚀 Step 1: Query the proper prediction API route directly
-      const response = await fetch("https://vaniconnect-vaniconnect-api.hf.space/api/predict", {
+      // 🚀 Step 1: Query your custom FastAPI route directly
+      const response = await fetch("https://vaniconnect-vaniconnect-api.hf.space/api/remove-video-watermark", {
         method: "POST",
         body: formData,
         signal: abortControllerRef.current.signal 
       });
 
       const data = await response.json();
-      console.log("📡 Direct Hugging Face Data Payload Response:", data);
+      console.log("📡 Direct FastAPI Response:", data);
       
       if (!response.ok || data.error) {
         throw new Error(data.detail || data.error || "Failed to process video");
       }
 
-      // 🚀 Step 2: Extract output values directly out of the real-time API response mapping structure
-      // Public Gradio spaces pass values back inside an explicit 'data' tuple or raw root strings
-      let generatedFilename = "";
-      if (data && data.data && data.data[0]) {
-         generatedFilename = typeof data.data[0] === 'object' ? data.data[0].name : data.data[0];
-      } else if (data && data.file_name) {
-         generatedFilename = data.file_name;
-      } else if (data && data.data) {
-         generatedFilename = data.data;
-      }
+      // 🚀 Step 2: Grab the exact filename your Python code sent back
+      const generatedFilename = data.file_name;
 
       if (!generatedFilename) {
-        throw new Error("Processing model succeeded but returned an unresolvable file target mapping string.");
+        throw new Error("Backend succeeded but did not return a file_name.");
       }
 
-      // Step 3: Sanitize string formats and mount direct public download stream path
-      const cleanFilename = generatedFilename.replace("file=", "").replace("file/", "");
-      const finalGradioUrl = `https://vaniconnect-vaniconnect-api.hf.space/gradio_api/file/${cleanFilename}`;
+      // 🚀 Step 3: Point directly to your FastAPI static downloads folder!
+      const finalVideoUrl = `https://vaniconnect-vaniconnect-api.hf.space/downloads/${generatedFilename}`;
       
-      console.log("🔗 Connecting player component directly to target asset URL string:", finalGradioUrl);
+      console.log("🔗 Connecting player to:", finalVideoUrl);
 
       // Step 4: Inject file path directly into state to unlock your user download interface instantly!
       setResultVideo(finalGradioUrl); 
