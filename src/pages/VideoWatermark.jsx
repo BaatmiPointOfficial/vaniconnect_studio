@@ -242,7 +242,7 @@ export default function VideoWatermark() {
       console.log("🔗 Connecting player to:", finalVideoUrl);
 
       // Step 4: Inject file path directly into state to unlock your user download interface instantly!
-      setResultVideo(finalGradioUrl); 
+      setResultVideo(finalVideoUrl);
       setIsProcessing(false);
 
     } catch (error) {
