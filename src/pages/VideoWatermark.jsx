@@ -229,21 +229,23 @@ export default function VideoWatermark() {
       }
 
       // 🚀 Step 2: Extract the filename just like your photo tool does!
-      const generatedFilename = data.file_name;
+      // 🚀 1. Grab the raw file name from your backend payload
+    const generatedFilename = data.file_name;
 
-      if (!generatedFilename) {
-        throw new Error("Backend succeeded but did not return a valid file target matching string.");
-      }
+    if (!generatedFilename) {
+      throw new Error("Backend succeeded but did not return a valid file_name.");
+    }
 
-      // 🚀 Step 3: Use your working Cloudflare Public bucket domain path!
-      // (Replace 'your- r2-public-url.com' with the exact base domain you use in your Photo tool frontend)
-      const finalVideoUrl = `https://your-r2-public-url.com/processed_videos/${generatedFilename}`;
-      
-      console.log("🔗 Connecting player directly to Cloudflare asset link:", finalVideoUrl);
+    // 🚀 2. Create the direct Cloudflare URL string
+    // CRITICAL: Replace 'your-r2-public-bucket-url.com' with your actual Cloudflare R2 public URL
+    const cloudflareBaseUrl = "https://your-r2-public-bucket-url.com";
+    const finalVideoUrl = `${cloudflareBaseUrl}/processed_videos/${generatedFilename}`;
+    
+    console.log("🔗 Connecting player directly to Cloudflare asset link:", finalVideoUrl);
 
-      // Step 4: Inject file path directly into state
-      setResultVideo(finalVideoUrl); 
-      setIsProcessing(false);
+    // 🚀 3. Pass the final link to the player state
+    setResultVideo(finalVideoUrl); 
+    setIsProcessing(false);
 
     } catch (error) {
       if (error.name === 'AbortError') {
