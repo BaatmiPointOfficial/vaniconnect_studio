@@ -223,26 +223,26 @@ export default function VideoWatermark() {
       });
 
       const data = await response.json();
-      console.log("📡 Direct FastAPI Response:", data);
       
       if (!response.ok || data.error) {
         throw new Error(data.detail || data.error || "Failed to process video");
       }
 
-      // 🚀 Step 2: Grab the exact filename your Python code sent back
+      // 🚀 Step 2: Extract the filename just like your photo tool does!
       const generatedFilename = data.file_name;
 
       if (!generatedFilename) {
-        throw new Error("Backend succeeded but did not return a file_name.");
+        throw new Error("Backend succeeded but did not return a valid file target matching string.");
       }
 
-      // 🚀 Step 3: Point directly to your FastAPI static downloads folder!
-      const finalVideoUrl = `https://vaniconnect-vaniconnect-api.hf.space/downloads/${generatedFilename}`;
+      // 🚀 Step 3: Use your working Cloudflare Public bucket domain path!
+      // (Replace 'your- r2-public-url.com' with the exact base domain you use in your Photo tool frontend)
+      const finalVideoUrl = `https://your-r2-public-url.com/processed_videos/${generatedFilename}`;
       
-      console.log("🔗 Connecting player to:", finalVideoUrl);
+      console.log("🔗 Connecting player directly to Cloudflare asset link:", finalVideoUrl);
 
-      // Step 4: Inject file path directly into state to unlock your user download interface instantly!
-      setResultVideo(finalVideoUrl);
+      // Step 4: Inject file path directly into state
+      setResultVideo(finalVideoUrl); 
       setIsProcessing(false);
 
     } catch (error) {
