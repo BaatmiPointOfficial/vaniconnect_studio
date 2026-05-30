@@ -237,10 +237,11 @@ export default function VideoWatermark() {
     }
 
     // 🚀 2. Create the direct Cloudflare URL string
-    // CRITICAL: Replace 'your-r2-public-bucket-url.com' with your actual Cloudflare R2 public URL
-    const cloudflareBaseUrl = "https://your-r2-public-bucket-url.com";
-    const finalVideoUrl = `${cloudflareBaseUrl}/processed_videos/${generatedFilename}`;
-    
+  // Replace the URL string below with your actual R2 Public URL!
+const R2_PUBLIC_URL = "https://pub-98e9dffa20b840209de8be8bb4cd083d.r2.dev"; 
+
+// Construct the full path to the video
+const finalVideoUrl = `${R2_PUBLIC_URL}/processed_videos/${generatedFilename}`;
     console.log("🔗 Connecting player directly to Cloudflare asset link:", finalVideoUrl);
 
     // 🚀 3. Pass the final link to the player state
@@ -527,26 +528,36 @@ export default function VideoWatermark() {
         )}
 
         {/* EXPLICIT RESULT MULTIMEDIA DISPLAY PLAYER PANEL */}
-        {resultVideo && (
-          <div className="mt-10 pt-8 border-t border-white/60 animate-in slide-in-from-bottom-4 duration-500 max-w-3xl mx-auto">
-            <h3 className="text-xl font-extrabold text-slate-800 mb-4 flex items-center"><CheckCircle2 className="text-emerald-500 mr-2" /> Watermark Removed!</h3>
-            <div className="bg-white/50 p-6 rounded-2xl border border-white/80 text-center flex flex-col items-center">
-              <div className="w-full rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 mb-6 bg-black">
-                <video 
-                  key={resultVideo} 
-                  src={resultVideo} 
-                  controls 
-                  autoPlay 
-                  className="w-full max-h-[400px] object-contain" 
-                />
-              </div>
-              <p className="text-slate-600 font-medium mb-6">Your video has been successfully processed by the Python engine.</p>
-              <button onClick={handleForceDownload} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center">
-                <Download size={20} className="mr-2" /> Download Clean Video
-              </button>
-            </div>
-          </div>
-        )}
+{resultVideo && (
+  <div className="mt-10 pt-8 border-t border-white/60 animate-in slide-in-from-bottom-4 duration-500 max-w-3xl mx-auto">
+    <h3 className="text-xl font-extrabold text-slate-800 mb-4 flex items-center">
+      <CheckCircle2 className="text-emerald-500 mr-2" /> Watermark Removed!
+    </h3>
+    <div className="bg-white/50 p-6 rounded-2xl border border-white/80 text-center flex flex-col items-center">
+      <div className="w-full rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 mb-6 bg-black">
+        <video 
+          key={resultVideo} 
+          src={resultVideo} 
+          controls 
+          autoPlay 
+          className="w-full max-h-[400px] object-contain" 
+        />
+      </div>
+      <p className="text-slate-600 font-medium mb-6">Your video has been successfully processed by the Python engine.</p>
+      
+      {/* UPDATE: Changed button to an anchor link to completely bypass browser security blocks */}
+      <a 
+        href={resultVideo} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        download={resultVideo.split('/').pop()} 
+        className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center text-decoration-none"
+      >
+        <Download size={20} className="mr-2" /> Download Clean Video
+      </a>
+    </div>
+  </div>
+)}
 
       </div>
     </>
