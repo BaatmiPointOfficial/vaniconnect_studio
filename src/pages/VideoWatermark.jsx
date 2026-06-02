@@ -534,24 +534,27 @@ const finalVideoUrl = `${R2_PUBLIC_URL}/processed_videos/${generatedFilename}`;
       <CheckCircle2 className="text-emerald-500 mr-2" /> Watermark Removed!
     </h3>
     <div className="bg-white/50 p-6 rounded-2xl border border-white/80 text-center flex flex-col items-center">
-      <div className="w-full rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 mb-6 bg-black">
+      
+      {/* 🌟 FIXED PLAYER CONTAINER: Changed from w-full to w-fit to wrap perfectly around vertical reels */}
+      <div className="w-fit mx-auto rounded-xl overflow-hidden shadow-lg border-2 border-slate-200/50 mb-6 bg-black">
         <video 
           key={resultVideo} 
           src={resultVideo} 
           controls 
           autoPlay 
-          className="w-full max-h-[400px] object-contain" 
+          className="max-w-full max-h-[450px] object-contain" 
         />
       </div>
+
       <p className="text-slate-600 font-medium mb-6">Your video has been successfully processed by the Python engine.</p>
       
-      {/* FIXED: Changed from anchor to a button triggering the forced local blob download */}
+      {/* Your Force Download Button */}
       <button 
-  onClick={handleForceDownload}
-  className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center cursor-pointer border-none"
->
-  <Download size={20} className="mr-2" /> Download Clean Video
-</button>
+        onClick={handleForceDownload}
+        className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center cursor-pointer border-none"
+      >
+        <Download size={20} className="mr-2" /> Download Clean Video
+      </button>
     </div>
   </div>
 )}
