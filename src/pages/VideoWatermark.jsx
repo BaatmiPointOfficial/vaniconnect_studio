@@ -527,7 +527,7 @@ const finalVideoUrl = `${R2_PUBLIC_URL}/processed_videos/${generatedFilename}`;
           </div>
         )}
 
-        {/* EXPLICIT RESULT MULTIMEDIA DISPLAY PLAYER PANEL */}
+       {/* EXPLICIT RESULT MULTIMEDIA DISPLAY PLAYER PANEL */}
 {resultVideo && (
   <div className="mt-10 pt-8 border-t border-white/60 animate-in slide-in-from-bottom-4 duration-500 max-w-3xl mx-auto">
     <h3 className="text-xl font-extrabold text-slate-800 mb-4 flex items-center">
@@ -545,16 +545,13 @@ const finalVideoUrl = `${R2_PUBLIC_URL}/processed_videos/${generatedFilename}`;
       </div>
       <p className="text-slate-600 font-medium mb-6">Your video has been successfully processed by the Python engine.</p>
       
-      {/* UPDATE: Changed button to an anchor link to completely bypass browser security blocks */}
-      <a 
-        href={resultVideo} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        download={resultVideo.split('/').pop()} 
-        className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center text-decoration-none"
-      >
-        <Download size={20} className="mr-2" /> Download Clean Video
-      </a>
+      {/* FIXED: Changed from anchor to a button triggering the forced local blob download */}
+      <button 
+  onClick={handleForceDownload}
+  className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-colors inline-flex items-center cursor-pointer border-none"
+>
+  <Download size={20} className="mr-2" /> Download Clean Video
+</button>
     </div>
   </div>
 )}
